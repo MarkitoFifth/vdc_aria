@@ -1,115 +1,153 @@
 import 'package:flutter/material.dart';
 
-import '../dati_inseribili/dati.dart';
+import '../services/archivio_partite.dart';
+import '../screens/tutte_partite_screen.dart';
+import '../screens/dettaglio_partita_screen.dart';
 
 class UltimePartiteWidget extends StatelessWidget {
-  final List<Partita> partite;
-  final VoidCallback onTap;
-
   const UltimePartiteWidget({
     super.key,
-    required this.partite,
-    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    final ultimePartite =
+        archivioPartite.reversed.take(5).toList();
+
     return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        margin: const EdgeInsets.all(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                const TuttePartiteScreen(),
+          ),
+        );
+      },
 
-          child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(18),
 
-            children: [
-              Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
 
-                children: [
-                  const Text(
-                    'Ultime partite',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
 
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 18,
-                  ),
-                ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ================================================
+            // TITOLO
+            // ================================================
+
+            const Text(
+              'ULTIME PARTITE',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1,
               ),
+            ),
 
-              const SizedBox(height: 15),
+            const SizedBox(height: 14),
 
-              if (partite.isEmpty)
-                const Text(
-                  'Nessuna partita inserita',
+            // ================================================
+            // LISTA
+            // ================================================
+
+            if (ultimePartite.isEmpty)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: Text(
+                  'Nessuna partita',
                   style: TextStyle(
                     color: Colors.grey,
                   ),
                 ),
-
-              ...partite.map(
+              )
+            else
+              ...ultimePartite.map(
                 (partita) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(
-                      vertical: 6,
-                    ),
+                  final bool vinta =
+                      partita.risultato.toUpperCase() == 'V';
 
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            partita.avversario,
-                            style:
-                                const TextStyle(
-                              fontSize: 16,
-                              fontWeight:
-                                  FontWeight.w500,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              DettaglioPartitaScreen(
+                            partita: partita,
+                          ),
+                        ),
+                      );
+                    },
+
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 12,
+                      ),
+
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              partita.avversario,
+                              overflow:
+                                  TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontWeight:
+                                    FontWeight.w600,
+                              ),
                             ),
                           ),
-                        ),
 
-                        Text(
-                          partita.risultato == 'V'
-                              ? 'VINTA'
-                              : 'PERSA',
-
-                          style: TextStyle(
-                            fontWeight:
-                                FontWeight.bold,
-
-                            color:
-                                partita.risultato == 'V'
-                                    ? Colors.green
-                                    : Colors.red,
+                          Text(
+                            vinta ? 'V' : 'P',
+                            style: TextStyle(
+                              color: vinta
+                                  ? Colors.green
+                                  : Colors.red,
+                              fontWeight:
+                                  FontWeight.bold,
+                            ),
                           ),
-                        ),
-
-                        const SizedBox(width: 10),
-
-                        Text(
-                          partita.categoria,
-                          style:
-                              const TextStyle(
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },
               ),
-            ],
-          ),
+
+            // ================================================
+            // VEDI TUTTE
+            // ================================================
+
+            const SizedBox(height: 2),
+
+            Align(
+              alignment: Alignment.centerRight,
+
+              child: Text(
+                'Vedi tutte →',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey.shade700,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

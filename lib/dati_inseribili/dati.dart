@@ -6,8 +6,8 @@ class DatiAttacchi {
 
   DatiAttacchi({
     required this.attacchiEffettuati,
-    required this.attacchiPunto,
     required this.attacchiErrori,
+    required this.attacchiPunto,
     required this.attacchiMurati,
   });
 }
@@ -19,8 +19,8 @@ class DatiMuro {
 
   DatiMuro({
     required this.muriEffettuati,
-    required this.muriPunto,
     required this.muriErrori,
+    required this.muriPunto,
   });
 }
 
@@ -31,8 +31,8 @@ class DatiBattuta {
 
   DatiBattuta({
     required this.battuteEffettuate,
-    required this.battutePunto,
     required this.battuteErrori,
+    required this.battutePunto,
   });
 }
 
