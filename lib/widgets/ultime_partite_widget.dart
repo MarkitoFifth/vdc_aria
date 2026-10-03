@@ -16,21 +16,16 @@ class UltimePartiteWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-
       child: Card(
         margin: const EdgeInsets.all(16),
-
         child: Padding(
           padding: const EdgeInsets.all(16),
 
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment:
+                CrossAxisAlignment.start,
 
             children: [
-              // ==================================
-              // TITOLO
-              // ==================================
-
               Row(
                 mainAxisAlignment:
                     MainAxisAlignment.spaceBetween,
@@ -53,10 +48,6 @@ class UltimePartiteWidget extends StatelessWidget {
 
               const SizedBox(height: 15),
 
-              // ==================================
-              // NESSUNA PARTITA
-              // ==================================
-
               if (partite.isEmpty)
                 const Text(
                   'Nessuna partita inserita',
@@ -65,38 +56,36 @@ class UltimePartiteWidget extends StatelessWidget {
                   ),
                 ),
 
-              // ==================================
-              // PARTITE
-              // ==================================
-
               ...partite.map(
                 (partita) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(
+                    padding:
+                        const EdgeInsets.symmetric(
                       vertical: 6,
                     ),
 
                     child: Row(
                       children: [
-                        // Squadra
                         Expanded(
                           child: Text(
                             partita.avversario,
-                            style: const TextStyle(
+                            style:
+                                const TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.w500,
+                              fontWeight:
+                                  FontWeight.w500,
                             ),
                           ),
                         ),
 
-                        // VINTA / PERSA
                         Text(
                           partita.risultato == 'V'
                               ? 'VINTA'
                               : 'PERSA',
 
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight:
+                                FontWeight.bold,
 
                             color:
                                 partita.risultato == 'V'
@@ -107,10 +96,10 @@ class UltimePartiteWidget extends StatelessWidget {
 
                         const SizedBox(width: 10),
 
-                        // Categoria
                         Text(
                           partita.categoria,
-                          style: const TextStyle(
+                          style:
+                              const TextStyle(
                             color: Colors.grey,
                           ),
                         ),

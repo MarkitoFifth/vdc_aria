@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vdc_aria/screens/dettaglio_partita_screen.dart';
 
 import '../services/archivio_partite.dart';
 import 'dettaglio_partita_screen.dart';
@@ -23,20 +22,24 @@ class TuttePartiteScreen extends StatelessWidget {
                 ),
               ),
             )
-
           : ListView.builder(
               itemCount: archivioPartite.length,
 
               itemBuilder: (context, index) {
-                final partita = archivioPartite[index];
+                final partita =
+                    archivioPartite[index];
 
                 return ListTile(
                   title: Text(
                     partita.avversario,
-
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight:
+                          FontWeight.bold,
                     ),
+                  ),
+
+                  subtitle: Text(
+                    partita.categoria,
                   ),
 
                   trailing: Text(
@@ -45,7 +48,8 @@ class TuttePartiteScreen extends StatelessWidget {
                         : 'PERSA',
 
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight:
+                          FontWeight.bold,
 
                       color:
                           partita.risultato == 'V'
@@ -57,12 +61,12 @@ class TuttePartiteScreen extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-
                       MaterialPageRoute(
-                        builder: (context) =>
-                            DettaglioPartitaScreen(
-                          partita: partita,
-                        ),
+                        builder: (context) {
+                          return DettaglioPartitaScreen(
+                            partita: partita,
+                          );
+                        },
                       ),
                     );
                   },

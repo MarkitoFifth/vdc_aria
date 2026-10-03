@@ -2,19 +2,23 @@ class DatiAttacchi {
   final int attacchiEffettuati;
   final int attacchiPunto;
   final int attacchiErrori;
+  final int attacchiMurati;
 
   DatiAttacchi({
     required this.attacchiEffettuati,
-    required this.attacchiErrori,
     required this.attacchiPunto,
+    required this.attacchiErrori,
+    required this.attacchiMurati,
   });
 }
 
 class DatiMuro {
+  final int muriEffettuati;
   final int muriPunto;
   final int muriErrori;
 
   DatiMuro({
+    required this.muriEffettuati,
     required this.muriPunto,
     required this.muriErrori,
   });
@@ -67,11 +71,22 @@ class Partita {
   final String luogo;
   final DateTime data;
 
+  final DatiAttacchi attacchi;
+  final DatiMuro muro;
+  final DatiBattuta battuta;
+  final DatiRicezione ricezione;
+  final DatiDifesa difesa;
+
   Partita({
     required this.avversario,
     required this.categoria,
     required this.risultato,
     required this.luogo,
     required this.data,
+    required this.attacchi,
+    required this.muro,
+    required this.battuta,
+    required this.ricezione,
+    required this.difesa,
   });
 }

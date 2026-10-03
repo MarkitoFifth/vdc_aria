@@ -1,33 +1,28 @@
 import 'package:flutter/material.dart';
 
-import '../dati_inseribili/dati.dart';
-import '../services/archivio_partite.dart';
+import '../screens/scout_partita_screen.dart';
 
 class NuovaPartitaScreen extends StatefulWidget {
   const NuovaPartitaScreen({super.key});
 
   @override
-  State<NuovaPartitaScreen> createState() => _NuovaPartitaScreenState();
+  State<NuovaPartitaScreen> createState() =>
+      _NuovaPartitaScreenState();
 }
 
-class _NuovaPartitaScreenState extends State<NuovaPartitaScreen> {
-  // Controller del campo "Avversario"
+class _NuovaPartitaScreenState
+    extends State<NuovaPartitaScreen> {
   final TextEditingController avversarioController =
       TextEditingController();
 
-  // Dati selezionati
   String categoriaSelezionata = 'Serie C';
   String risultatoSelezionato = 'V';
   String luogoSelezionato = 'C';
 
   DateTime? dataSelezionata;
 
-  // ==========================================
-  // SELEZIONE DATA
-  // ==========================================
-
   Future<void> selezionaData() async {
-    DateTime? data = await showDatePicker(
+    final DateTime? data = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2020),
@@ -41,52 +36,47 @@ class _NuovaPartitaScreenState extends State<NuovaPartitaScreen> {
     }
   }
 
-  // ==========================================
-  // SALVA PARTITA
-  // ==========================================
-
-  void salvaPartita() {
-    // Controllo avversario
+  void continuaScouting() {
     if (avversarioController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Inserisci la squadra avversaria'),
+          content: Text(
+            'Inserisci la squadra avversaria',
+          ),
         ),
       );
 
       return;
     }
 
-    // Controllo data
     if (dataSelezionata == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Seleziona la data della partita'),
+          content: Text(
+            'Seleziona la data della partita',
+          ),
         ),
       );
 
       return;
     }
 
-    // Creazione della partita
-    final Partita nuovaPartita = Partita(
-      avversario: avversarioController.text.trim(),
-      categoria: categoriaSelezionata,
-      risultato: risultatoSelezionato,
-      luogo: luogoSelezionato,
-      data: dataSelezionata!,
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return ScoutPartitaScreen(
+            avversario:
+                avversarioController.text.trim(),
+            categoria: categoriaSelezionata,
+            risultato: risultatoSelezionato,
+            luogo: luogoSelezionato,
+            data: dataSelezionata!,
+          );
+        },
+      ),
     );
-
-    // Aggiungiamo la partita all'archivio
-    archivioPartite.add(nuovaPartita);
-
-    // Torniamo alla Home
-    Navigator.pop(context);
   }
-
-  // ==========================================
-  // DISPOSE
-  // ==========================================
 
   @override
   void dispose() {
@@ -94,28 +84,18 @@ class _NuovaPartitaScreenState extends State<NuovaPartitaScreen> {
     super.dispose();
   }
 
-  // ==========================================
-  // INTERFACCIA
-  // ==========================================
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nuova partita'),
       ),
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
-
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
           children: [
-            // ==================================
-            // AVVERSARIO
-            // ==================================
-
             const Text(
               'Squadra avversaria',
               style: TextStyle(
@@ -136,10 +116,6 @@ class _NuovaPartitaScreenState extends State<NuovaPartitaScreen> {
 
             const SizedBox(height: 25),
 
-            // ==================================
-            // CATEGORIA
-            // ==================================
-
             const Text(
               'Categoria',
               style: TextStyle(
@@ -151,24 +127,20 @@ class _NuovaPartitaScreenState extends State<NuovaPartitaScreen> {
             const SizedBox(height: 8),
 
             DropdownButtonFormField<String>(
-              value: categoriaSelezionata,
-
+              initialValue: categoriaSelezionata,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
               ),
-
               items: const [
                 DropdownMenuItem(
                   value: 'Serie C',
                   child: Text('Serie C'),
                 ),
-
                 DropdownMenuItem(
                   value: 'Under 19',
                   child: Text('Under 19'),
                 ),
               ],
-
               onChanged: (valore) {
                 if (valore == null) return;
 
@@ -179,10 +151,6 @@ class _NuovaPartitaScreenState extends State<NuovaPartitaScreen> {
             ),
 
             const SizedBox(height: 25),
-
-            // ==================================
-            // RISULTATO
-            // ==================================
 
             const Text(
               'Risultato',
@@ -196,7 +164,6 @@ class _NuovaPartitaScreenState extends State<NuovaPartitaScreen> {
               title: const Text('Vinta'),
               value: 'V',
               groupValue: risultatoSelezionato,
-
               onChanged: (valore) {
                 if (valore == null) return;
 
@@ -210,7 +177,6 @@ class _NuovaPartitaScreenState extends State<NuovaPartitaScreen> {
               title: const Text('Persa'),
               value: 'S',
               groupValue: risultatoSelezionato,
-
               onChanged: (valore) {
                 if (valore == null) return;
 
@@ -221,10 +187,6 @@ class _NuovaPartitaScreenState extends State<NuovaPartitaScreen> {
             ),
 
             const SizedBox(height: 15),
-
-            // ==================================
-            // LUOGO
-            // ==================================
 
             const Text(
               'Luogo',
@@ -238,7 +200,6 @@ class _NuovaPartitaScreenState extends State<NuovaPartitaScreen> {
               title: const Text('Casa'),
               value: 'C',
               groupValue: luogoSelezionato,
-
               onChanged: (valore) {
                 if (valore == null) return;
 
@@ -252,7 +213,6 @@ class _NuovaPartitaScreenState extends State<NuovaPartitaScreen> {
               title: const Text('Fuori casa'),
               value: 'F',
               groupValue: luogoSelezionato,
-
               onChanged: (valore) {
                 if (valore == null) return;
 
@@ -263,10 +223,6 @@ class _NuovaPartitaScreenState extends State<NuovaPartitaScreen> {
             ),
 
             const SizedBox(height: 15),
-
-            // ==================================
-            // DATA
-            // ==================================
 
             const Text(
               'Data della partita',
@@ -282,7 +238,9 @@ class _NuovaPartitaScreenState extends State<NuovaPartitaScreen> {
               children: [
                 ElevatedButton(
                   onPressed: selezionaData,
-                  child: const Text('Seleziona data'),
+                  child: const Text(
+                    'Seleziona data',
+                  ),
                 ),
 
                 const SizedBox(width: 15),
@@ -301,21 +259,14 @@ class _NuovaPartitaScreenState extends State<NuovaPartitaScreen> {
 
             const SizedBox(height: 35),
 
-            // ==================================
-            // SALVA
-            // ==================================
-
             SizedBox(
               width: double.infinity,
-
               child: ElevatedButton(
-                onPressed: salvaPartita,
-
+                onPressed: continuaScouting,
                 child: const Padding(
                   padding: EdgeInsets.all(15),
-
                   child: Text(
-                    'SALVA PARTITA',
+                    'CONTINUA CON LO SCOUT',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
