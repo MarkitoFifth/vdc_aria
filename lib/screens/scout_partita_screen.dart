@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../dati_inseribili/dati.dart';
-import '../services/archivio_partite.dart';
+import '../services/archivio_stagioni.dart';
 
 class ScoutPartitaScreen extends StatefulWidget {
   final String avversario;
@@ -26,52 +26,99 @@ class ScoutPartitaScreen extends StatefulWidget {
 
 class _ScoutPartitaScreenState
     extends State<ScoutPartitaScreen> {
+
+  // =========================
+  // ATTACCO
+  // =========================
+
   final TextEditingController attacchiEffettuati =
       TextEditingController();
+
   final TextEditingController attacchiPunto =
       TextEditingController();
+
   final TextEditingController attacchiErrori =
       TextEditingController();
+
   final TextEditingController attacchiMurati =
       TextEditingController();
 
+  // =========================
+  // BATTUTA
+  // =========================
+
   final TextEditingController battuteEffettuate =
       TextEditingController();
+
   final TextEditingController battutePunto =
       TextEditingController();
+
   final TextEditingController battuteErrori =
       TextEditingController();
 
+  // =========================
+  // RICEZIONE
+  // =========================
+
   final TextEditingController ricezioniEffettuate =
       TextEditingController();
+
   final TextEditingController ricezioniPositive =
       TextEditingController();
+
   final TextEditingController ricezioniNegative =
       TextEditingController();
+
   final TextEditingController ricezioniErrori =
       TextEditingController();
 
+  // =========================
+  // MURO
+  // =========================
+
   final TextEditingController muriEffettuati =
       TextEditingController();
+
   final TextEditingController muriPunto =
       TextEditingController();
+
   final TextEditingController muriErrori =
       TextEditingController();
 
+  // =========================
+  // DIFESA
+  // =========================
+
   final TextEditingController difeseEffettuate =
       TextEditingController();
+
   final TextEditingController difesePositive =
       TextEditingController();
+
   final TextEditingController difeseNegative =
       TextEditingController();
+
   final TextEditingController difeseErrori =
       TextEditingController();
 
-  int valore(TextEditingController controller) {
-    return int.tryParse(controller.text) ?? 0;
+  // =========================
+  // CONVERSIONE VALORI
+  // =========================
+
+  int valore(
+    TextEditingController controller,
+  ) {
+    return int.tryParse(
+          controller.text.trim(),
+        ) ??
+        0;
   }
 
-  void salvaPartita() {
+  // =========================
+  // SALVATAGGIO PARTITA
+  // =========================
+
+  Future<void> salvaPartita() async {
     final Partita nuovaPartita = Partita(
       avversario: widget.avversario,
       categoria: widget.categoria,
@@ -79,59 +126,100 @@ class _ScoutPartitaScreenState
       luogo: widget.luogo,
       data: widget.data,
 
+      // =========================
+      // ATTACCO
+      // =========================
+
       attacchi: DatiAttacchi(
         attacchiEffettuati:
             valore(attacchiEffettuati),
+
         attacchiPunto:
             valore(attacchiPunto),
+
         attacchiErrori:
             valore(attacchiErrori),
+
         attacchiMurati:
             valore(attacchiMurati),
       ),
 
+      // =========================
+      // BATTUTA
+      // =========================
+
       battuta: DatiBattuta(
         battuteEffettuate:
             valore(battuteEffettuate),
+
         battutePunto:
             valore(battutePunto),
+
         battuteErrori:
             valore(battuteErrori),
       ),
 
+      // =========================
+      // RICEZIONE
+      // =========================
+
       ricezione: DatiRicezione(
         ricezioniEffettuate:
             valore(ricezioniEffettuate),
+
         ricezioniPositive:
             valore(ricezioniPositive),
+
         ricezioniNegative:
             valore(ricezioniNegative),
+
         ricezioniErrori:
             valore(ricezioniErrori),
       ),
 
+      // =========================
+      // MURO
+      // =========================
+
       muro: DatiMuro(
         muriEffettuati:
             valore(muriEffettuati),
+
         muriPunto:
             valore(muriPunto),
+
         muriErrori:
             valore(muriErrori),
       ),
 
+      // =========================
+      // DIFESA
+      // =========================
+
       difesa: DatiDifesa(
         difeseEffettuate:
             valore(difeseEffettuate),
+
         difesePositive:
             valore(difesePositive),
+
         difeseNegative:
             valore(difeseNegative),
+
         difeseErrore:
             valore(difeseErrori),
       ),
     );
 
-    archivioPartite.add(nuovaPartita);
+    // =========================
+    // SALVA SU SQLITE
+    // =========================
+
+    await ArchivioStagioni.aggiungiPartita(
+      nuovaPartita,
+    );
+
+    if (!mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -141,42 +229,67 @@ class _ScoutPartitaScreenState
       ),
     );
 
+    // Torna alla Home
     Navigator.pop(context);
     Navigator.pop(context);
   }
+
+  // =========================
+  // CAMPO NUMERICO
+  // =========================
 
   Widget campoNumerico(
     String titolo,
     TextEditingController controller,
   ) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding:
+          const EdgeInsets.only(bottom: 12),
+
       child: TextField(
         controller: controller,
-        keyboardType: TextInputType.number,
+
+        keyboardType:
+            TextInputType.number,
+
         decoration: InputDecoration(
           labelText: titolo,
-          border: const OutlineInputBorder(),
+          border:
+              const OutlineInputBorder(),
         ),
       ),
     );
   }
 
-  Widget titoloSezione(String testo) {
+  // =========================
+  // TITOLO SEZIONE
+  // =========================
+
+  Widget titoloSezione(
+    String testo,
+  ) {
     return Padding(
-      padding: const EdgeInsets.only(
+      padding:
+          const EdgeInsets.only(
         top: 25,
         bottom: 15,
       ),
+
       child: Text(
         testo,
+
         style: const TextStyle(
           fontSize: 22,
-          fontWeight: FontWeight.bold,
+          fontWeight:
+              FontWeight.bold,
         ),
       ),
     );
   }
+
+  // =========================
+  // DISPOSE
+  // =========================
 
   @override
   void dispose() {
@@ -206,43 +319,105 @@ class _ScoutPartitaScreenState
     super.dispose();
   }
 
+  // =========================
+  // BUILD
+  // =========================
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scout partita'),
+        title: const Text(
+          'Scout partita',
+        ),
       ),
 
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding:
+            const EdgeInsets.all(16),
 
         child: Column(
           crossAxisAlignment:
               CrossAxisAlignment.start,
 
           children: [
-            Text(
-              widget.avversario,
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
+            // =========================
+            // INFORMAZIONI PARTITA
+            // =========================
+
+            Card(
+              child: Padding(
+                padding:
+                    const EdgeInsets.all(16),
+
+                child: Column(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
+
+                  children: [
+                    Text(
+                      'VS ${widget.avversario}',
+                      style:
+                          const TextStyle(
+                        fontSize: 20,
+                        fontWeight:
+                            FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(
+                      height: 8,
+                    ),
+
+                    Text(
+                      '${widget.categoria} • '
+                      '${widget.luogo}',
+                    ),
+
+                    const SizedBox(
+                      height: 4,
+                    ),
+
+                    Text(
+                      'Risultato: ${widget.risultato}',
+                    ),
+
+                    const SizedBox(
+                      height: 4,
+                    ),
+
+                    Text(
+                      'Data: '
+                      '${widget.data.day.toString().padLeft(2, '0')}/'
+                      '${widget.data.month.toString().padLeft(2, '0')}/'
+                      '${widget.data.year}',
+                    ),
+
+                    const SizedBox(
+                      height: 8,
+                    ),
+
+                    Text(
+                      'Stagione: '
+                      '${ArchivioStagioni.stagioneAttiva.nome}',
+                      style:
+                          const TextStyle(
+                        fontWeight:
+                            FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
 
-            Text(
-              '${widget.categoria} • '
-              '${widget.risultato == 'V' ? 'VINTA' : 'PERSA'}',
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
-            ),
-
-            // =====================
+            // =========================
             // ATTACCO
-            // =====================
+            // =========================
 
-            titoloSezione('🏐 ATTACCO'),
+            titoloSezione(
+              'ATTACCO',
+            ),
 
             campoNumerico(
               'Attacchi effettuati',
@@ -264,11 +439,13 @@ class _ScoutPartitaScreenState
               attacchiMurati,
             ),
 
-            // =====================
+            // =========================
             // BATTUTA
-            // =====================
+            // =========================
 
-            titoloSezione('🎯 BATTUTA'),
+            titoloSezione(
+              'BATTUTA',
+            ),
 
             campoNumerico(
               'Battute effettuate',
@@ -276,20 +453,22 @@ class _ScoutPartitaScreenState
             ),
 
             campoNumerico(
-              'Ace',
+              'Ace / battute punto',
               battutePunto,
             ),
 
             campoNumerico(
-              'Errori battuta',
+              'Battute errore',
               battuteErrori,
             ),
 
-            // =====================
+            // =========================
             // RICEZIONE
-            // =====================
+            // =========================
 
-            titoloSezione('👐 RICEZIONE'),
+            titoloSezione(
+              'RICEZIONE',
+            ),
 
             campoNumerico(
               'Ricezioni effettuate',
@@ -307,15 +486,17 @@ class _ScoutPartitaScreenState
             ),
 
             campoNumerico(
-              'Errori ricezione',
+              'Ricezioni errore',
               ricezioniErrori,
             ),
 
-            // =====================
+            // =========================
             // MURO
-            // =====================
+            // =========================
 
-            titoloSezione('🧱 MURO'),
+            titoloSezione(
+              'MURO',
+            ),
 
             campoNumerico(
               'Muri effettuati',
@@ -328,15 +509,17 @@ class _ScoutPartitaScreenState
             ),
 
             campoNumerico(
-              'Errori muro',
+              'Muri errore',
               muriErrori,
             ),
 
-            // =====================
+            // =========================
             // DIFESA
-            // =====================
+            // =========================
 
-            titoloSezione('🛡️ DIFESA'),
+            titoloSezione(
+              'DIFESA',
+            ),
 
             campoNumerico(
               'Difese effettuate',
@@ -354,30 +537,47 @@ class _ScoutPartitaScreenState
             ),
 
             campoNumerico(
-              'Errori difesa',
+              'Difese errore',
               difeseErrori,
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(
+              height: 20,
+            ),
+
+            // =========================
+            // SALVA
+            // =========================
 
             SizedBox(
               width: double.infinity,
+
               child: ElevatedButton(
-                onPressed: salvaPartita,
-                child: const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text(
-                    'SALVA PARTITA E SCOUT',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                onPressed:
+                    salvaPartita,
+
+                style:
+                    ElevatedButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(
+                    vertical: 16,
+                  ),
+                ),
+
+                child: const Text(
+                  'SALVA PARTITA',
+                  style:
+                      TextStyle(
+                    fontWeight:
+                        FontWeight.bold,
                   ),
                 ),
               ),
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(
+              height: 30,
+            ),
           ],
         ),
       ),

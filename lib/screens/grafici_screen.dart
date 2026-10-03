@@ -1,227 +1,137 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../services/archivio_partite.dart';
 import '../services/analizzatore_statistiche.dart';
 
 class GraficiScreen extends StatelessWidget {
-  const GraficiScreen({
-    super.key,
-  });
+  const GraficiScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final partite = archivioPartite;
-
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5),
+
+      // ========================================================
+      // APP BAR
+      // ========================================================
+
       appBar: AppBar(
-        title: const Text('Andamento statistiche'),
+        backgroundColor: const Color(0xFFF5F5F5),
+        elevation: 0,
+        title: const Text(
+          'Analisi andamento',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
 
-      body: partite.isEmpty
+      // ========================================================
+      // BODY
+      // ========================================================
+
+      body: archivioPartite.isEmpty
           ? const Center(
               child: Text(
-                'Inserisci delle partite per visualizzare i grafici.',
+                'Non ci sono ancora partite.',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             )
           : SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'ANDAMENTO STAGIONALE',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1,
-                    ),
-                  ),
+                  // ==================================================
+                  // ATTACCO
+                  // ==================================================
 
-                  const SizedBox(height: 6),
-
-                  Text(
-                    'Ogni punto rappresenta una partita.',
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  _GraficoSezione(
-                    titolo: 'Attacco',
+                  _sezioneGrafico(
+                    titolo: 'ATTACCO',
                     sottotitolo:
-                        'Kill% e efficienza attacco',
-                    valori: [
-                      _SerieGrafico(
-                        nome: 'Kill%',
-                        valori: partite.map(
-                          (partita) =>
-                              AnalizzatoreStatistiche
-                                  .calcolaKillPercentuale(
-                            partita.attacchi,
-                          ),
-                        ).toList(),
-                      ),
-                      _SerieGrafico(
-                        nome: 'Efficienza',
-                        valori: partite.map(
-                          (partita) =>
-                              AnalizzatoreStatistiche
-                                  .calcolaEfficienzaAttacco(
-                            partita.attacchi,
-                          ),
-                        ).toList(),
-                      ),
-                    ],
+                        'Andamento di Kill% ed efficienza',
+                    grafico: _graficoAttacco(),
                   ),
 
                   const SizedBox(height: 16),
 
-                  _GraficoSezione(
-                    titolo: 'Battuta',
+                  // ==================================================
+                  // BATTUTA
+                  // ==================================================
+
+                  _sezioneGrafico(
+                    titolo: 'BATTUTA',
                     sottotitolo:
-                        'Ace% e efficienza battuta',
-                    valori: [
-                      _SerieGrafico(
-                        nome: 'Ace%',
-                        valori: partite.map(
-                          (partita) =>
-                              AnalizzatoreStatistiche
-                                  .calcolaAcePercentuale(
-                            partita.battuta,
-                          ),
-                        ).toList(),
-                      ),
-                      _SerieGrafico(
-                        nome: 'Efficienza',
-                        valori: partite.map(
-                          (partita) =>
-                              AnalizzatoreStatistiche
-                                  .calcolaEfficienzaBattuta(
-                            partita.battuta,
-                          ),
-                        ).toList(),
-                      ),
-                    ],
+                        'Andamento di Ace% ed efficienza',
+                    grafico: _graficoBattuta(),
                   ),
 
                   const SizedBox(height: 16),
 
-                  _GraficoSezione(
-                    titolo: 'Ricezione',
+                  // ==================================================
+                  // RICEZIONE
+                  // ==================================================
+
+                  _sezioneGrafico(
+                    titolo: 'RICEZIONE',
                     sottotitolo:
-                        'Positività e efficienza ricezione',
-                    valori: [
-                      _SerieGrafico(
-                        nome: 'Positività',
-                        valori: partite.map(
-                          (partita) =>
-                              AnalizzatoreStatistiche
-                                  .calcolaPositivitaRicezione(
-                            partita.ricezione,
-                          ),
-                        ).toList(),
-                      ),
-                      _SerieGrafico(
-                        nome: 'Efficienza',
-                        valori: partite.map(
-                          (partita) =>
-                              AnalizzatoreStatistiche
-                                  .calcolaEfficienzaRicezione(
-                            partita.ricezione,
-                          ),
-                        ).toList(),
-                      ),
-                    ],
+                        'Positività ed efficienza della ricezione',
+                    grafico: _graficoRicezione(),
                   ),
 
                   const SizedBox(height: 16),
 
-                  _GraficoSezione(
-                    titolo: 'Difesa',
+                  // ==================================================
+                  // DIFESA
+                  // ==================================================
+
+                  _sezioneGrafico(
+                    titolo: 'DIFESA',
                     sottotitolo:
-                        'Positività e efficienza difesa',
-                    valori: [
-                      _SerieGrafico(
-                        nome: 'Positività',
-                        valori: partite.map(
-                          (partita) =>
-                              AnalizzatoreStatistiche
-                                  .calcolaPositivitaDifesa(
-                            partita.difesa,
-                          ),
-                        ).toList(),
-                      ),
-                      _SerieGrafico(
-                        nome: 'Efficienza',
-                        valori: partite.map(
-                          (partita) =>
-                              AnalizzatoreStatistiche
-                                  .calcolaEfficienzaDifesa(
-                            partita.difesa,
-                          ),
-                        ).toList(),
-                      ),
-                    ],
+                        'Positività ed efficienza della difesa',
+                    grafico: _graficoDifesa(),
                   ),
 
                   const SizedBox(height: 16),
 
-                  _GraficoSezione(
-                    titolo: 'Muro',
+                  // ==================================================
+                  // MURO
+                  // ==================================================
+
+                  _sezioneGrafico(
+                    titolo: 'MURO',
                     sottotitolo:
-                        'Percentuale muri punto',
-                    valori: [
-                      _SerieGrafico(
-                        nome: 'Muri punto',
-                        valori: partite.map(
-                          (partita) =>
-                              AnalizzatoreStatistiche
-                                  .calcolaBlockPercentuale(
-                            partita.muro,
-                          ),
-                        ).toList(),
-                      ),
-                    ],
+                        'Percentuale di muri punto ed efficienza',
+                    grafico: _graficoMuro(),
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30),
                 ],
               ),
             ),
     );
   }
-}
 
-class _SerieGrafico {
-  final String nome;
-  final List<double> valori;
+  // ============================================================
+  // CARD DEL GRAFICO
+  // ============================================================
 
-  const _SerieGrafico({
-    required this.nome,
-    required this.valori,
-  });
-}
-
-class _GraficoSezione extends StatelessWidget {
-  final String titolo;
-  final String sottotitolo;
-  final List<_SerieGrafico> valori;
-
-  const _GraficoSezione({
-    required this.titolo,
-    required this.sottotitolo,
-    required this.valori,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _sezioneGrafico({
+    required String titolo,
+    required String sottotitolo,
+    required Widget grafico,
+  }) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18),
-
+      padding: const EdgeInsets.fromLTRB(
+        18,
+        18,
+        18,
+        20,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -233,7 +143,6 @@ class _GraficoSezione extends StatelessWidget {
           ),
         ],
       ),
-
       child: Column(
         crossAxisAlignment:
             CrossAxisAlignment.start,
@@ -241,214 +150,564 @@ class _GraficoSezione extends StatelessWidget {
           Text(
             titolo,
             style: const TextStyle(
-              fontSize: 18,
+              fontSize: 12,
               fontWeight: FontWeight.bold,
+              letterSpacing: 1.2,
             ),
           ),
 
-          const SizedBox(height: 3),
+          const SizedBox(height: 4),
 
           Text(
             sottotitolo,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 13,
               color: Colors.grey.shade600,
             ),
           ),
 
-          const SizedBox(height: 18),
+          const SizedBox(height: 20),
 
-          SizedBox(
-            height: 210,
-            child: CustomPaint(
-              painter: _MultiGraficoPainter(
-                serie: valori,
-              ),
-              child: const SizedBox.expand(),
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          Wrap(
-            spacing: 18,
-            runSpacing: 8,
-            children: valori.map(
-              (serie) {
-                return Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 9,
-                      height: 9,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: _coloreSerie(
-                          valori.indexOf(serie),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      serie.nome,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ).toList(),
-          ),
+          grafico,
         ],
       ),
     );
   }
 
-  Color _coloreSerie(int indice) {
-    const colori = [
-      Colors.blue,
-      Colors.orange,
-      Colors.green,
-      Colors.purple,
-    ];
+  // ============================================================
+  // ATTACCO
+  // ============================================================
 
-    return colori[indice % colori.length];
+  Widget _graficoAttacco() {
+    final kill = archivioPartite.map((partita) {
+      return AnalizzatoreStatistiche
+          .calcolaKillPercentuale(
+        partita.attacchi,
+      );
+    }).toList();
+
+    final efficienza =
+        archivioPartite.map((partita) {
+      return AnalizzatoreStatistiche
+          .calcolaEfficienzaAttacco(
+        partita.attacchi,
+      );
+    }).toList();
+
+    return _graficoDueLinee(
+      valori1: kill,
+      valori2: efficienza,
+      nome1: 'Kill',
+      nome2: 'Efficienza',
+      minimoY: -50,
+      massimoY: 100,
+    );
   }
-}
 
-class _MultiGraficoPainter extends CustomPainter {
-  final List<_SerieGrafico> serie;
+  // ============================================================
+  // BATTUTA
+  // ============================================================
 
-  _MultiGraficoPainter({
-    required this.serie,
-  });
+  Widget _graficoBattuta() {
+    final ace = archivioPartite.map((partita) {
+      return AnalizzatoreStatistiche
+          .calcolaAcePercentuale(
+        partita.battuta,
+      );
+    }).toList();
 
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (serie.isEmpty) return;
+    final efficienza =
+        archivioPartite.map((partita) {
+      return AnalizzatoreStatistiche
+          .calcolaEfficienzaBattuta(
+        partita.battuta,
+      );
+    }).toList();
 
-    final double graphWidth = size.width - 10;
-    final double graphHeight = size.height - 20;
+    return _graficoDueLinee(
+      valori1: ace,
+      valori2: efficienza,
+      nome1: 'Ace',
+      nome2: 'Efficienza',
+      minimoY: -50,
+      massimoY: 50,
+    );
+  }
 
-    const double minValore = -10;
-    const double maxValore = 100;
+  // ============================================================
+  // RICEZIONE
+  // ============================================================
 
-    double yDaValore(double valore) {
-      final normalizzato =
-          (valore - minValore) /
-          (maxValore - minValore);
+  Widget _graficoRicezione() {
+    final positivita =
+        archivioPartite.map((partita) {
+      return AnalizzatoreStatistiche
+          .calcolaPositivitaRicezione(
+        partita.ricezione,
+      );
+    }).toList();
 
-      return graphHeight -
-          (normalizzato * graphHeight);
-    }
+    final efficienza =
+        archivioPartite.map((partita) {
+      return AnalizzatoreStatistiche
+          .calcolaEfficienzaRicezione(
+        partita.ricezione,
+      );
+    }).toList();
 
-    // Griglia
-    final paintGriglia = Paint()
-      ..color = Colors.grey.withOpacity(0.15)
-      ..strokeWidth = 1;
+    return _graficoDueLinee(
+      valori1: positivita,
+      valori2: efficienza,
+      nome1: 'Positività',
+      nome2: 'Efficienza',
+      minimoY: -50,
+      massimoY: 100,
+    );
+  }
 
-    for (int i = 0; i <= 4; i++) {
-      final y =
-          (graphHeight / 4) * i;
+  // ============================================================
+  // DIFESA
+  // ============================================================
 
-      canvas.drawLine(
-        Offset(0, y),
-        Offset(size.width, y),
-        paintGriglia,
+  Widget _graficoDifesa() {
+    final positivita =
+        archivioPartite.map((partita) {
+      return AnalizzatoreStatistiche
+          .calcolaPositivitaDifesa(
+        partita.difesa,
+      );
+    }).toList();
+
+    final efficienza =
+        archivioPartite.map((partita) {
+      return AnalizzatoreStatistiche
+          .calcolaEfficienzaDifesa(
+        partita.difesa,
+      );
+    }).toList();
+
+    return _graficoDueLinee(
+      valori1: positivita,
+      valori2: efficienza,
+      nome1: 'Positività',
+      nome2: 'Efficienza',
+      minimoY: -50,
+      massimoY: 100,
+    );
+  }
+
+  // ============================================================
+  // MURO
+  // ============================================================
+
+  Widget _graficoMuro() {
+    final block = archivioPartite.map((partita) {
+      return AnalizzatoreStatistiche
+          .calcolaBlockPercentuale(
+        partita.muro,
+      );
+    }).toList();
+
+    final efficienza =
+        archivioPartite.map((partita) {
+      return AnalizzatoreStatistiche
+          .calcolaEfficienzaMuro(
+        partita.muro,
+      );
+    }).toList();
+
+    return _graficoDueLinee(
+      valori1: block,
+      valori2: efficienza,
+      nome1: 'Muro punto',
+      nome2: 'Efficienza',
+      minimoY: -50,
+      massimoY: 100,
+    );
+  }
+
+  // ============================================================
+  // GRAFICO GENERICO A DUE LINEE
+  // ============================================================
+
+  Widget _graficoDueLinee({
+    required List<double> valori1,
+    required List<double> valori2,
+    required String nome1,
+    required String nome2,
+    required double minimoY,
+    required double massimoY,
+  }) {
+    if (archivioPartite.length < 2) {
+      return SizedBox(
+        height: 250,
+        child: Center(
+          child: Text(
+            'Servono almeno 2 partite per vedere l\'andamento.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+            ),
+          ),
+        ),
       );
     }
 
-    const colori = [
-      Colors.blue,
-      Colors.orange,
-      Colors.green,
-      Colors.purple,
-    ];
+    final spots1 = List.generate(
+      valori1.length,
+      (index) => FlSpot(
+        index.toDouble(),
+        valori1[index],
+      ),
+    );
 
-    for (int serieIndex = 0;
-        serieIndex < serie.length;
-        serieIndex++) {
-      final valori = serie[serieIndex].valori;
+    final spots2 = List.generate(
+      valori2.length,
+      (index) => FlSpot(
+        index.toDouble(),
+        valori2[index],
+      ),
+    );
 
-      if (valori.isEmpty) continue;
+    return Column(
+      children: [
+        // ========================================================
+        // GRAFICO
+        // ========================================================
 
-      final paintLinea = Paint()
-        ..color =
-            colori[serieIndex % colori.length]
-        ..strokeWidth = 2.5
-        ..style = PaintingStyle.stroke
-        ..strokeCap = StrokeCap.round;
+        SizedBox(
+          height: 260,
+          width: double.infinity,
 
-      final paintPunto = Paint()
-        ..color =
-            colori[serieIndex % colori.length]
-        ..style = PaintingStyle.fill;
+          // IMPORTANTE:
+          // impedisce al grafico di uscire dalla card
+          child: ClipRect(
+            child: LineChart(
+              LineChartData(
+                minX: 0,
+                maxX:
+                    (archivioPartite.length - 1)
+                        .toDouble(),
 
-      final path = Path();
+                minY: minimoY,
+                maxY: massimoY,
 
-      for (int i = 0; i < valori.length; i++) {
-        final double x;
+                // ==================================================
+                // GRIGLIA
+                // ==================================================
 
-        if (valori.length == 1) {
-          x = graphWidth / 2;
-        } else {
-          x =
-              (graphWidth / (valori.length - 1)) *
-                  i;
-        }
+                gridData: FlGridData(
+                  show: true,
+                  drawVerticalLine: false,
+                  horizontalInterval: 20,
+                  getDrawingHorizontalLine:
+                      (value) {
+                    return FlLine(
+                      color: value == 0
+                          ? Colors.grey
+                              .withOpacity(0.45)
+                          : Colors.grey
+                              .withOpacity(0.15),
+                      strokeWidth:
+                          value == 0 ? 1.5 : 1,
+                    );
+                  },
+                ),
 
-        final y = yDaValore(
-          valori[i].clamp(
-            minValore,
-            maxValore,
+                // ==================================================
+                // ASSI
+                // ==================================================
+
+                titlesData: FlTitlesData(
+                  topTitles:
+                      const AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: false,
+                    ),
+                  ),
+
+                  rightTitles:
+                      const AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: false,
+                    ),
+                  ),
+
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 42,
+                      interval: 20,
+                      getTitlesWidget:
+                          (value, meta) {
+                        return Text(
+                          '${value.toInt()}%',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors
+                                .grey.shade600,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  bottomTitles:
+                      AxisTitles(
+                    sideTitles:
+                        SideTitles(
+                      showTitles: true,
+                      reservedSize: 30,
+                      interval: 1,
+                      getTitlesWidget:
+                          (value, meta) {
+                        final indice =
+                            value.toInt();
+
+                        if (indice < 0 ||
+                            indice >=
+                                archivioPartite
+                                    .length) {
+                          return const SizedBox();
+                        }
+
+                        return Text(
+                          '${indice + 1}',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors
+                                .grey.shade600,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+
+                // ==================================================
+                // BORDO
+                // ==================================================
+
+                borderData:
+                    FlBorderData(
+                  show: false,
+                ),
+
+                // ==================================================
+                // TOUCH
+                // ==================================================
+
+                lineTouchData:
+                    LineTouchData(
+                  enabled: true,
+                  touchSpotThreshold: 20,
+                  handleBuiltInTouches: true,
+
+                  touchTooltipData:
+                      LineTouchTooltipData(
+                    fitInsideHorizontally:
+                        true,
+                    fitInsideVertically:
+                        true,
+                    maxContentWidth: 180,
+                    tooltipPadding:
+                        const EdgeInsets.all(
+                      10,
+                    ),
+
+                    getTooltipItems:
+                        (touchedSpots) {
+                      if (touchedSpots
+                          .isEmpty) {
+                        return [];
+                      }
+
+                      final indice =
+                          touchedSpots
+                              .first.x
+                              .toInt();
+
+                      if (indice < 0 ||
+                          indice >=
+                              archivioPartite
+                                  .length) {
+                        return [];
+                      }
+
+                      final partita =
+                          archivioPartite[
+                              indice];
+
+                      final risultati =
+                          <LineTooltipItem?>[];
+
+                      // VS + DATA
+                      risultati.add(
+                        LineTooltipItem(
+                          'VS ${partita.avversario}\n',
+                          const TextStyle(
+                            color: Colors.white,
+                            fontWeight:
+                                FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                          children: [
+                            TextSpan(
+                              text:
+                                  '${partita.data.day.toString().padLeft(2, '0')}/'
+                                  '${partita.data.month.toString().padLeft(2, '0')}/'
+                                  '${partita.data.year}',
+                              style:
+                                  const TextStyle(
+                                color:
+                                    Colors.white70,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+
+                      // VALORI
+                      for (final spot
+                          in touchedSpots) {
+                        final nome =
+                            spot.barIndex ==
+                                    0
+                                ? nome1
+                                : nome2;
+
+                        risultati.add(
+                          LineTooltipItem(
+                            '$nome: '
+                            '${spot.y.toStringAsFixed(1)}%',
+                            TextStyle(
+                              color:
+                                  spot.bar.color ??
+                                      Colors.white,
+                              fontWeight:
+                                  FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        );
+                      }
+
+                      return risultati;
+                    },
+                  ),
+                ),
+
+                // ==================================================
+                // LINEE
+                // ==================================================
+
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: spots1,
+                    isCurved: true,
+                    barWidth: 3,
+                    color: Colors.blue,
+
+                    dotData:
+                        const FlDotData(
+                      show: true,
+                    ),
+
+                    belowBarData:
+                        BarAreaData(
+                      show: false,
+                    ),
+                  ),
+
+                  LineChartBarData(
+                    spots: spots2,
+                    isCurved: true,
+                    barWidth: 3,
+                    color: Colors.orange,
+
+                    dotData:
+                        const FlDotData(
+                      show: true,
+                    ),
+
+                    belowBarData:
+                        BarAreaData(
+                      show: false,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        );
+        ),
 
-        if (i == 0) {
-          path.moveTo(x, y);
-        } else {
-          path.lineTo(x, y);
-        }
-      }
+        const SizedBox(height: 12),
 
-      canvas.drawPath(
-        path,
-        paintLinea,
-      );
+        // ========================================================
+        // LEGENDA
+        // ========================================================
 
-      for (int i = 0; i < valori.length; i++) {
-        final double x;
+        Row(
+          mainAxisAlignment:
+              MainAxisAlignment.center,
+          children: [
+            _legenda(
+              colore: Colors.blue,
+              testo: nome1,
+            ),
 
-        if (valori.length == 1) {
-          x = graphWidth / 2;
-        } else {
-          x =
-              (graphWidth / (valori.length - 1)) *
-                  i;
-        }
+            const SizedBox(width: 25),
 
-        final y = yDaValore(
-          valori[i].clamp(
-            minValore,
-            maxValore,
+            _legenda(
+              colore: Colors.orange,
+              testo: nome2,
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 6),
+
+        Text(
+          'Tocca un punto per vedere il valore della partita',
+          style: TextStyle(
+            fontSize: 11,
+            color: Colors.grey.shade500,
           ),
-        );
-
-        canvas.drawCircle(
-          Offset(x, y),
-          4,
-          paintPunto,
-        );
-      }
-    }
+        ),
+      ],
+    );
   }
 
-  @override
-  bool shouldRepaint(
-    covariant _MultiGraficoPainter oldDelegate,
-  ) {
-    return true;
+  // ============================================================
+  // LEGENDA
+  // ============================================================
+
+  Widget _legenda({
+    required Color colore,
+    required String testo,
+  }) {
+    return Row(
+      children: [
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: colore,
+            shape: BoxShape.circle,
+          ),
+        ),
+
+        const SizedBox(width: 6),
+
+        Text(
+          testo,
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -1,32 +1,48 @@
 import 'package:flutter/material.dart';
 
+import '../services/archivio_stagioni.dart';
+
 import '../widgets/ultima_partita_widget.dart';
 import '../widgets/ultime_partite_widget.dart';
 import '../widgets/medie_statistiche_widget.dart';
 import '../widgets/grafico_andamento_widget.dart';
+
 import 'nuova_partita_screen.dart';
+import 'selezione_stagione_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({
-    super.key,
-  });
+  const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeScreen> createState() =>
+      _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState
+    extends State<HomeScreen> {
+  Future<void> apriSelezioneStagione() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            const SelezioneStagioneScreen(),
+      ),
+    );
+
+    if (!mounted) return;
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-
-      // ======================================================
-      // APP BAR
-      // ======================================================
+      backgroundColor:
+          const Color(0xFFF5F5F5),
 
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor:
+            const Color(0xFFF5F5F5),
         elevation: 0,
 
         title: const Text(
@@ -35,67 +51,80 @@ class _HomeScreenState extends State<HomeScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-      ),
 
-      // ======================================================
-      // BODY
-      // ======================================================
+        actions: [
+          Padding(
+            padding:
+                const EdgeInsets.only(
+              right: 12,
+            ),
+            child: TextButton.icon(
+              onPressed:
+                  apriSelezioneStagione,
+              icon: const Icon(
+                Icons.keyboard_arrow_down,
+              ),
+              label: Text(
+                ArchivioStagioni
+                    .stagioneAttiva
+                    .nome,
+              ),
+              style: TextButton.styleFrom(
+                foregroundColor:
+                    Colors.black,
+                backgroundColor:
+                    Colors.white,
+                shape:
+                    RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(
+                    12,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
 
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-
+          padding:
+              const EdgeInsets.all(16),
           child: Column(
             children: [
-
-              // ==================================================
-              // ULTIMA PARTITA
-              // ==================================================
-
               UltimaPartitaWidget(),
 
               const SizedBox(height: 14),
 
-              // ==================================================
-              // ULTIME PARTITE + MEDIE STAGIONALI
-              // ==================================================
-
               Row(
                 crossAxisAlignment:
                     CrossAxisAlignment.start,
-
                 children: [
                   Expanded(
                     flex: 45,
-                    child: UltimePartiteWidget(),
+                    child:
+                        UltimePartiteWidget(),
                   ),
 
                   const SizedBox(width: 14),
 
                   Expanded(
                     flex: 55,
-                    child: MedieStatisticheWidget(),
+                    child:
+                        MedieStatisticheWidget(),
                   ),
                 ],
               ),
 
               const SizedBox(height: 14),
 
-              // ==================================================
-              // GRAFICO PRINCIPALE
-              // ==================================================
-
               GraficoAndamentoWidget(),
 
               const SizedBox(height: 20),
 
-              // ==================================================
-              // AGGIUNGI NUOVA PARTITA
-              // ==================================================
-
               SizedBox(
                 width: double.infinity,
-
                 child: ElevatedButton(
                   onPressed: () async {
                     await Navigator.push(
@@ -106,25 +135,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
 
-                    // Quando torniamo dalla schermata
-                    // di inserimento partita, aggiorniamo
-                    // tutta la Home.
                     setState(() {});
                   },
-
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 4,
-                    ),
-
-                    child: Text(
-                      'Aggiungi una nuova partita',
-                    ),
+                  child: const Text(
+                    'Aggiungi una nuova partita',
                   ),
                 ),
               ),
-
-              const SizedBox(height: 10),
             ],
           ),
         ),

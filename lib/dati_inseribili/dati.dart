@@ -58,13 +58,15 @@ class DatiDifesa {
 
   DatiDifesa({
     required this.difeseEffettuate,
+    required this.difeseErrore,
     required this.difesePositive,
     required this.difeseNegative,
-    required this.difeseErrore,
   });
 }
 
 class Partita {
+  final int? id;
+
   final String avversario;
   final String categoria;
   final String risultato;
@@ -78,6 +80,7 @@ class Partita {
   final DatiDifesa difesa;
 
   Partita({
+    this.id,
     required this.avversario,
     required this.categoria,
     required this.risultato,
@@ -89,4 +92,32 @@ class Partita {
     required this.ricezione,
     required this.difesa,
   });
+
+  Partita copyWith({
+    int? id,
+    String? avversario,
+    String? categoria,
+    String? risultato,
+    String? luogo,
+    DateTime? data,
+    DatiAttacchi? attacchi,
+    DatiMuro? muro,
+    DatiBattuta? battuta,
+    DatiRicezione? ricezione,
+    DatiDifesa? difesa,
+  }) {
+    return Partita(
+      id: id ?? this.id,
+      avversario: avversario ?? this.avversario,
+      categoria: categoria ?? this.categoria,
+      risultato: risultato ?? this.risultato,
+      luogo: luogo ?? this.luogo,
+      data: data ?? this.data,
+      attacchi: attacchi ?? this.attacchi,
+      muro: muro ?? this.muro,
+      battuta: battuta ?? this.battuta,
+      ricezione: ricezione ?? this.ricezione,
+      difesa: difesa ?? this.difesa,
+    );
+  }
 }

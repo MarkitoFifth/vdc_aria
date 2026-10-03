@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 
 import 'screens/home_screen.dart';
+import 'services/archivio_stagioni.dart';
 
-void main() {
-  runApp(const MainApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await ArchivioStagioni.inizializza();
+
+  runApp(const VolleyDataCenterApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({
-    super.key,
-  });
+class VolleyDataCenterApp extends StatelessWidget {
+  const VolleyDataCenterApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +20,10 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Volley Data Center',
       theme: ThemeData(
-        useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.blue,
         ),
+        useMaterial3: true,
       ),
       home: const HomeScreen(),
     );
