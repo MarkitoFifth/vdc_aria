@@ -6,90 +6,128 @@ import '../dati_inseribili/dati.dart';
 class DatabaseService {
   static Database? _database;
 
+  static const int _versioneDatabase = 2;
+
   static Future<Database> get database async {
-    if (_database != null) {
+    if (_database != null && _database!.isOpen) {
       return _database!;
     }
 
     _database = await _initDatabase();
+
     return _database!;
   }
 
   static Future<Database> _initDatabase() async {
     final databasePath = await getDatabasesPath();
-    final path = join(databasePath, 'volley_data_center.db');
+    final path = join(
+      databasePath,
+      'volley_data_center.db',
+    );
 
     return await openDatabase(
       path,
-      version: 1,
+      version: _versioneDatabase,
+
       onConfigure: (db) async {
-        await db.execute('PRAGMA foreign_keys = ON');
+        await db.execute(
+          'PRAGMA foreign_keys = ON',
+        );
       },
+
       onCreate: (db, version) async {
-        await db.execute('''
-          CREATE TABLE stagioni (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT NOT NULL UNIQUE
-          )
-        ''');
+        await _creaTabelle(db);
+      },
 
-        await db.execute('''
-          CREATE TABLE partite (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-            stagione_id INTEGER NOT NULL,
-
-            avversario TEXT NOT NULL,
-            categoria TEXT NOT NULL,
-            risultato TEXT NOT NULL,
-            luogo TEXT NOT NULL,
-            data INTEGER NOT NULL,
-
-            attacchi_effettuati INTEGER NOT NULL,
-            attacchi_punto INTEGER NOT NULL,
-            attacchi_errori INTEGER NOT NULL,
-            attacchi_murati INTEGER NOT NULL,
-
-            muri_effettuati INTEGER NOT NULL,
-            muri_punto INTEGER NOT NULL,
-            muri_errori INTEGER NOT NULL,
-
-            battute_effettuate INTEGER NOT NULL,
-            battute_punto INTEGER NOT NULL,
-            battute_errori INTEGER NOT NULL,
-
-            ricezioni_effettuate INTEGER NOT NULL,
-            ricezioni_positive INTEGER NOT NULL,
-            ricezioni_negative INTEGER NOT NULL,
-            ricezioni_errori INTEGER NOT NULL,
-
-            difese_effettuate INTEGER NOT NULL,
-            difese_positive INTEGER NOT NULL,
-            difese_negative INTEGER NOT NULL,
-            difese_errori INTEGER NOT NULL,
-
-            FOREIGN KEY (stagione_id)
-              REFERENCES stagioni(id)
-              ON DELETE CASCADE
-          )
-        ''');
+      onUpgrade: (db, oldVersion, newVersion) async {
+        await _creaTabelle(db);
       },
     );
   }
 
-  // =========================
-  // STAGIONI
-  // =========================
+  static Future<void> _creaTabelle(
+    Database db,
+  ) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS stagioni (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL UNIQUE
+      )
+    ''');
 
-  static Future<int> inserisciStagione(String nome) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS partite (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+        stagione_id INTEGER NOT NULL,
+
+        avversario TEXT NOT NULL,
+        categoria TEXT NOT NULL,
+        risultato TEXT NOT NULL,
+        luogo TEXT NOT NULL,
+        data INTEGER NOT NULL,
+
+        attacchi_effettuati INTEGER NOT NULL,
+        attacchi_punto INTEGER NOT NULL,
+        attacchi_errori INTEGER NOT NULL,
+        attacchi_murati INTEGER NOT NULL,
+
+        muri_effettuati INTEGER NOT NULL,
+        muri_punto INTEGER NOT NULL,
+        muri_errori INTEGER NOT NULL,
+
+        battute_effettuate INTEGER NOT NULL,
+        battute_punto INTEGER NOT NULL,
+        battute_errori INTEGER NOT NULL,
+
+        ricezioni_effettuate INTEGER NOT NULL,
+        ricezioni_positive INTEGER NOT NULL,
+        ricezioni_negative INTEGER NOT NULL,
+        ricezioni_errori INTEGER NOT NULL,
+
+        difese_effettuate INTEGER NOT NULL,
+        difese_positive INTEGER NOT NULL,
+        difese_negative INTEGER NOT NULL,
+        difese_errori INTEGER NOT NULL,
+
+        FOREIGN KEY (stagione_id)
+          REFERENCES stagioni(id)
+          ON DELETE CASCADE
+      )
+    ''');
+  }
+
+  // =========================================================
+  // STAGIONI
+  // =========================================================
+
+  static Future<int> inserisciStagione(
+    String nome,
+  ) async {
     final db = await database;
 
-    return await db.insert(
-      'stagioni',
-      {
-        'nome': nome,
-      },
-    );
+    final nomePulito = nome.trim();
+
+    if (nomePulito.isEmpty) {
+      throw Exception(
+        'Il nome della stagione non può essere vuoto.',
+      );
+    }
+
+    try {
+      return await db.insert(
+        'stagioni',
+        {
+          'nome': nomePulito,
+        },
+        conflictAlgorithm:
+            ConflictAlgorithm.abort,
+      );
+    } catch (e) {
+      throw Exception(
+        'Errore durante la creazione della stagione: $e',
+      );
+    }
   }
 
   static Future<List<Map<String, Object?>>> leggiStagioni() async {
@@ -101,7 +139,9 @@ class DatabaseService {
     );
   }
 
-  static Future<void> eliminaStagione(int stagioneId) async {
+  static Future<void> eliminaStagione(
+    int stagioneId,
+  ) async {
     final db = await database;
 
     await db.delete(
@@ -111,9 +151,9 @@ class DatabaseService {
     );
   }
 
-  // =========================
+  // =========================================================
   // PARTITE
-  // =========================
+  // =========================================================
 
   static Future<int> inserisciPartita(
     int stagioneId,
@@ -189,7 +229,9 @@ class DatabaseService {
     );
   }
 
-  static Future<void> eliminaPartita(int partitaId) async {
+  static Future<void> eliminaPartita(
+    int partitaId,
+  ) async {
     final db = await database;
 
     await db.delete(
@@ -199,20 +241,27 @@ class DatabaseService {
     );
   }
 
-  // =========================
+  // =========================================================
   // CONVERSIONE DATABASE → PARTITA
-  // =========================
+  // =========================================================
 
-  static Partita partitaDaMap(Map<String, Object?> map) {
+  static Partita partitaDaMap(
+    Map<String, Object?> map,
+  ) {
     return Partita(
       id: map['id'] as int,
 
-      avversario: map['avversario'] as String,
-      categoria: map['categoria'] as String,
-      risultato: map['risultato'] as String,
-      luogo: map['luogo'] as String,
+      avversario:
+          map['avversario'] as String,
+      categoria:
+          map['categoria'] as String,
+      risultato:
+          map['risultato'] as String,
+      luogo:
+          map['luogo'] as String,
 
-      data: DateTime.fromMillisecondsSinceEpoch(
+      data:
+          DateTime.fromMillisecondsSinceEpoch(
         map['data'] as int,
       ),
 

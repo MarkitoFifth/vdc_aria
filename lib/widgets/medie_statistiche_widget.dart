@@ -23,9 +23,7 @@ class MedieStatisticheWidget extends StatelessWidget {
         AnalizzatoreStatistiche.mediaAcePercentuale(partite);
 
     final ricezione =
-        AnalizzatoreStatistiche.mediaPositivitaRicezione(
-      partite,
-    );
+        AnalizzatoreStatistiche.mediaPositivitaRicezione(partite);
 
     final difesa =
         AnalizzatoreStatistiche.mediaPositivitaDifesa(partite);
@@ -43,32 +41,46 @@ class MedieStatisticheWidget extends StatelessWidget {
           ),
         );
       },
-
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(18),
+        padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          border: Border.all(
+            color: const Color(0xFFEAEAEA),
+          ),
         ),
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'MEDIE STAGIONALI',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1,
-              ),
+            Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    'MEDIE STAGIONALI',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.1,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF4F4F4),
+                    borderRadius: BorderRadius.circular(9),
+                  ),
+                  child: const Icon(
+                    Icons.analytics_outlined,
+                    size: 16,
+                    color: Colors.black54,
+                  ),
+                ),
+              ],
             ),
 
             const SizedBox(height: 16),
@@ -77,44 +89,56 @@ class MedieStatisticheWidget extends StatelessWidget {
               titolo: 'Kill',
               valore: kill,
             ),
-
             _StatisticaMedia(
               titolo: 'Eff. attacco',
               valore: effAttacco,
             ),
-
             _StatisticaMedia(
               titolo: 'Ace',
               valore: ace,
             ),
-
             _StatisticaMedia(
               titolo: 'Ricezione',
               valore: ricezione,
             ),
-
             _StatisticaMedia(
               titolo: 'Difesa',
               valore: difesa,
             ),
-
             _StatisticaMedia(
               titolo: 'Muro',
               valore: muro,
+              ultima: true,
             ),
 
-            const SizedBox(height: 4),
+            const SizedBox(height: 8),
 
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                'Tutte le statistiche →',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey.shade700,
+            Container(
+              width: double.infinity,
+              height: 1,
+              color: const Color(0xFFF0F0F0),
+            ),
+
+            const SizedBox(height: 10),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  'Analisi completa',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.grey.shade700,
+                  ),
                 ),
-              ),
+                const SizedBox(width: 4),
+                const Icon(
+                  Icons.arrow_forward_rounded,
+                  size: 15,
+                  color: Colors.black54,
+                ),
+              ],
             ),
           ],
         ),
@@ -126,24 +150,29 @@ class MedieStatisticheWidget extends StatelessWidget {
 class _StatisticaMedia extends StatelessWidget {
   final String titolo;
   final double valore;
+  final bool ultima;
 
   const _StatisticaMedia({
     required this.titolo,
     required this.valore,
+    this.ultima = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 11),
+      padding: EdgeInsets.only(
+        bottom: ultima ? 0 : 10,
+      ),
       child: Row(
         children: [
           Expanded(
             child: Text(
               titolo,
               style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
               ),
             ),
           ),
@@ -152,7 +181,8 @@ class _StatisticaMedia extends StatelessWidget {
             '${valore.toStringAsFixed(1)}%',
             style: const TextStyle(
               fontSize: 13,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w800,
+              color: Colors.black,
             ),
           ),
         ],

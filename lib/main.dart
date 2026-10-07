@@ -8,11 +8,11 @@ Future<void> main() async {
 
   await ArchivioStagioni.inizializza();
 
-  runApp(const VolleyDataCenterApp());
+  runApp(const Rally());
 }
 
-class VolleyDataCenterApp extends StatelessWidget {
-  const VolleyDataCenterApp({super.key});
+class Rally extends StatelessWidget {
+  const Rally({super.key});
 
   @override
   Widget build(BuildContext context) {

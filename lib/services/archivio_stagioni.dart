@@ -28,13 +28,17 @@ class ArchivioStagioni {
           stagioneMap['id'] as int;
 
       final partiteMap =
-          await DatabaseService.leggiPartite(stagioneId);
+          await DatabaseService.leggiPartite(
+        stagioneId,
+      );
 
       final List<Partita> partite =
           partiteMap
               .map(
                 (map) =>
-                    DatabaseService.partitaDaMap(map),
+                    DatabaseService.partitaDaMap(
+                  map,
+                ),
               )
               .toList();
 
@@ -47,8 +51,6 @@ class ArchivioStagioni {
       );
     }
 
-    // Se non esiste nessuna stagione,
-    // ne creiamo automaticamente una.
     if (stagioni.isEmpty) {
       await creaStagione(
         '2026/27',
@@ -136,7 +138,9 @@ class ArchivioStagioni {
     );
 
     final Partita partitaSalvata =
-        partita.copyWith(id: partitaId);
+        partita.copyWith(
+      id: partitaId,
+    );
 
     stagione.partite.add(partitaSalvata);
   }
@@ -191,10 +195,12 @@ class ArchivioStagioni {
 
     stagioni.removeAt(indice);
 
-    if (indiceStagioneAttiva >= stagioni.length) {
+    if (indiceStagioneAttiva >=
+        stagioni.length) {
       indiceStagioneAttiva =
           stagioni.length - 1;
-    } else if (indice < indiceStagioneAttiva) {
+    } else if (
+        indice < indiceStagioneAttiva) {
       indiceStagioneAttiva--;
     }
   }

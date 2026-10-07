@@ -7,117 +7,94 @@ import '../services/analizzatore_statistiche.dart';
 class GraficiScreen extends StatelessWidget {
   const GraficiScreen({super.key});
 
+  static const Color background = Color(0xFFF5F5F5);
+  static const Color card = Colors.white;
+  static const Color primary = Color(0xFF111111);
+  static const Color secondary = Color(0xFF8A8A8A);
+  static const Color grid = Color(0xFFEAEAEA);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-
-      // ========================================================
-      // APP BAR
-      // ========================================================
+      backgroundColor: background,
 
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor: background,
         elevation: 0,
+        scrolledUnderElevation: 0,
         title: const Text(
           'Analisi andamento',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
+            color: primary,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.4,
           ),
         ),
       ),
-
-      // ========================================================
-      // BODY
-      // ========================================================
 
       body: archivioPartite.isEmpty
           ? const Center(
               child: Text(
                 'Non ci sono ancora partite.',
                 style: TextStyle(
-                  fontSize: 16,
+                  color: secondary,
+                  fontSize: 15,
                   fontWeight: FontWeight.w500,
                 ),
               ),
             )
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(
+                16,
+                8,
+                16,
+                32,
+              ),
               child: Column(
                 children: [
-                  // ==================================================
-                  // ATTACCO
-                  // ==================================================
-
                   _sezioneGrafico(
                     titolo: 'ATTACCO',
-                    sottotitolo:
-                        'Andamento di Kill% ed efficienza',
+                    sottotitolo: 'Kill ed efficienza',
                     grafico: _graficoAttacco(),
                   ),
 
-                  const SizedBox(height: 16),
-
-                  // ==================================================
-                  // BATTUTA
-                  // ==================================================
+                  const SizedBox(height: 14),
 
                   _sezioneGrafico(
                     titolo: 'BATTUTA',
-                    sottotitolo:
-                        'Andamento di Ace% ed efficienza',
+                    sottotitolo: 'Ace ed efficienza',
                     grafico: _graficoBattuta(),
                   ),
 
-                  const SizedBox(height: 16),
-
-                  // ==================================================
-                  // RICEZIONE
-                  // ==================================================
+                  const SizedBox(height: 14),
 
                   _sezioneGrafico(
                     titolo: 'RICEZIONE',
-                    sottotitolo:
-                        'Positività ed efficienza della ricezione',
+                    sottotitolo: 'Positività ed efficienza',
                     grafico: _graficoRicezione(),
                   ),
 
-                  const SizedBox(height: 16),
-
-                  // ==================================================
-                  // DIFESA
-                  // ==================================================
+                  const SizedBox(height: 14),
 
                   _sezioneGrafico(
                     titolo: 'DIFESA',
-                    sottotitolo:
-                        'Positività ed efficienza della difesa',
+                    sottotitolo: 'Positività ed efficienza',
                     grafico: _graficoDifesa(),
                   ),
 
-                  const SizedBox(height: 16),
-
-                  // ==================================================
-                  // MURO
-                  // ==================================================
+                  const SizedBox(height: 14),
 
                   _sezioneGrafico(
                     titolo: 'MURO',
-                    sottotitolo:
-                        'Percentuale di muri punto ed efficienza',
+                    sottotitolo: 'Muri punto ed efficienza',
                     grafico: _graficoMuro(),
                   ),
-
-                  const SizedBox(height: 30),
                 ],
               ),
             ),
     );
   }
-
-  // ============================================================
-  // CARD DEL GRAFICO
-  // ============================================================
 
   Widget _sezioneGrafico({
     required String titolo,
@@ -130,43 +107,64 @@ class GraficiScreen extends StatelessWidget {
         18,
         18,
         18,
-        20,
+        16,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: card,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(
+          color: const Color(0xFFEDEDED),
+        ),
       ),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            titolo,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      titolo,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.4,
+                        color: primary,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      sottotitolo,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: secondary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3F3F3),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.show_chart_rounded,
+                  size: 18,
+                  color: primary,
+                ),
+              ),
+            ],
           ),
 
-          const SizedBox(height: 4),
-
-          Text(
-            sottotitolo,
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey.shade600,
-            ),
-          ),
-
-          const SizedBox(height: 20),
+          const SizedBox(height: 18),
 
           grafico,
         ],
@@ -199,8 +197,6 @@ class GraficiScreen extends StatelessWidget {
       valori2: efficienza,
       nome1: 'Kill',
       nome2: 'Efficienza',
-      minimoY: -50,
-      massimoY: 100,
     );
   }
 
@@ -229,8 +225,6 @@ class GraficiScreen extends StatelessWidget {
       valori2: efficienza,
       nome1: 'Ace',
       nome2: 'Efficienza',
-      minimoY: -50,
-      massimoY: 50,
     );
   }
 
@@ -260,8 +254,6 @@ class GraficiScreen extends StatelessWidget {
       valori2: efficienza,
       nome1: 'Positività',
       nome2: 'Efficienza',
-      minimoY: -50,
-      massimoY: 100,
     );
   }
 
@@ -291,8 +283,6 @@ class GraficiScreen extends StatelessWidget {
       valori2: efficienza,
       nome1: 'Positività',
       nome2: 'Efficienza',
-      minimoY: -50,
-      massimoY: 100,
     );
   }
 
@@ -321,13 +311,11 @@ class GraficiScreen extends StatelessWidget {
       valori2: efficienza,
       nome1: 'Muro punto',
       nome2: 'Efficienza',
-      minimoY: -50,
-      massimoY: 100,
     );
   }
 
   // ============================================================
-  // GRAFICO GENERICO A DUE LINEE
+  // GRAFICO
   // ============================================================
 
   Widget _graficoDueLinee({
@@ -335,19 +323,45 @@ class GraficiScreen extends StatelessWidget {
     required List<double> valori2,
     required String nome1,
     required String nome2,
-    required double minimoY,
-    required double massimoY,
   }) {
     if (archivioPartite.length < 2) {
       return SizedBox(
-        height: 250,
+        height: 220,
         child: Center(
-          child: Text(
-            'Servono almeno 2 partite per vedere l\'andamento.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.grey.shade600,
-            ),
+          child: Column(
+            mainAxisAlignment:
+                MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3F3F3),
+                  borderRadius:
+                      BorderRadius.circular(14),
+                ),
+                child: const Icon(
+                  Icons.show_chart_rounded,
+                  color: primary,
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Servono almeno 2 partite',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'per visualizzare l\'andamento',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -371,16 +385,9 @@ class GraficiScreen extends StatelessWidget {
 
     return Column(
       children: [
-        // ========================================================
-        // GRAFICO
-        // ========================================================
-
         SizedBox(
-          height: 260,
+          height: 240,
           width: double.infinity,
-
-          // IMPORTANTE:
-          // impedisce al grafico di uscire dalla card
           child: ClipRect(
             child: LineChart(
               LineChartData(
@@ -389,63 +396,57 @@ class GraficiScreen extends StatelessWidget {
                     (archivioPartite.length - 1)
                         .toDouble(),
 
-                minY: minimoY,
-                maxY: massimoY,
-
-                // ==================================================
-                // GRIGLIA
-                // ==================================================
+                minY: -50,
+                maxY: 100,
 
                 gridData: FlGridData(
                   show: true,
                   drawVerticalLine: false,
-                  horizontalInterval: 20,
+                  horizontalInterval: 25,
                   getDrawingHorizontalLine:
                       (value) {
                     return FlLine(
                       color: value == 0
-                          ? Colors.grey
-                              .withOpacity(0.45)
-                          : Colors.grey
-                              .withOpacity(0.15),
+                          ? const Color(0xFFD0D0D0)
+                          : grid,
                       strokeWidth:
-                          value == 0 ? 1.5 : 1,
+                          value == 0 ? 1.2 : 0.8,
                     );
                   },
                 ),
 
-                // ==================================================
-                // ASSI
-                // ==================================================
-
                 titlesData: FlTitlesData(
                   topTitles:
                       const AxisTitles(
-                    sideTitles: SideTitles(
+                    sideTitles:
+                        SideTitles(
                       showTitles: false,
                     ),
                   ),
-
                   rightTitles:
                       const AxisTitles(
-                    sideTitles: SideTitles(
+                    sideTitles:
+                        SideTitles(
                       showTitles: false,
                     ),
                   ),
 
                   leftTitles: AxisTitles(
-                    sideTitles: SideTitles(
+                    sideTitles:
+                        SideTitles(
                       showTitles: true,
-                      reservedSize: 42,
-                      interval: 20,
+                      reservedSize: 38,
+                      interval: 25,
                       getTitlesWidget:
                           (value, meta) {
                         return Text(
                           '${value.toInt()}%',
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors
-                                .grey.shade600,
+                          style:
+                              const TextStyle(
+                            fontSize: 9,
+                            color: secondary,
+                            fontWeight:
+                                FontWeight.w500,
                           ),
                         );
                       },
@@ -457,7 +458,7 @@ class GraficiScreen extends StatelessWidget {
                     sideTitles:
                         SideTitles(
                       showTitles: true,
-                      reservedSize: 30,
+                      reservedSize: 25,
                       interval: 1,
                       getTitlesWidget:
                           (value, meta) {
@@ -473,10 +474,12 @@ class GraficiScreen extends StatelessWidget {
 
                         return Text(
                           '${indice + 1}',
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors
-                                .grey.shade600,
+                          style:
+                              const TextStyle(
+                            fontSize: 9,
+                            color: secondary,
+                            fontWeight:
+                                FontWeight.w500,
                           ),
                         );
                       },
@@ -484,47 +487,73 @@ class GraficiScreen extends StatelessWidget {
                   ),
                 ),
 
-                // ==================================================
-                // BORDO
-                // ==================================================
-
                 borderData:
                     FlBorderData(
                   show: false,
                 ),
 
-                // ==================================================
-                // TOUCH
-                // ==================================================
-
                 lineTouchData:
                     LineTouchData(
                   enabled: true,
-                  touchSpotThreshold: 20,
-                  handleBuiltInTouches: true,
+                  touchSpotThreshold: 24,
+
+                  getTouchedSpotIndicator:
+                      (
+                    barData,
+                    spotIndexes,
+                  ) {
+                    return spotIndexes.map(
+                      (index) {
+                        return TouchedSpotIndicatorData(
+                          FlLine(
+                            color: const Color(
+                              0xFFCCCCCC,
+                            ),
+                            strokeWidth: 1,
+                          ),
+                          FlDotData(
+                            getDotPainter:
+                                (
+                              spot,
+                              percent,
+                              bar,
+                              index,
+                            ) {
+                              return FlDotCirclePainter(
+                                radius: 5,
+                                color:
+                                    Colors.white,
+                                strokeWidth: 3,
+                                strokeColor:
+                                    primary,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ).toList();
+                  },
 
                   touchTooltipData:
                       LineTouchTooltipData(
-                    fitInsideHorizontally:
-                        true,
-                    fitInsideVertically:
-                        true,
-                    maxContentWidth: 180,
+                    fitInsideHorizontally: true,
+                    fitInsideVertically: true,
+                    maxContentWidth: 190,
                     tooltipPadding:
-                        const EdgeInsets.all(
-                      10,
+                        const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
                     ),
-
                     getTooltipItems:
                         (touchedSpots) {
-                      if (touchedSpots
-                          .isEmpty) {
+                      if (touchedSpots.isEmpty) {
                         return [];
                       }
 
                       final indice =
                           touchedSpots
-                              .first.x
+                              .first
+                              .x
                               .toInt();
 
                       if (indice < 0 ||
@@ -535,21 +564,19 @@ class GraficiScreen extends StatelessWidget {
                       }
 
                       final partita =
-                          archivioPartite[
-                              indice];
+                          archivioPartite[indice];
 
-                      final risultati =
+                      final items =
                           <LineTooltipItem?>[];
 
-                      // VS + DATA
-                      risultati.add(
+                      items.add(
                         LineTooltipItem(
                           'VS ${partita.avversario}\n',
                           const TextStyle(
                             color: Colors.white,
                             fontWeight:
-                                FontWeight.bold,
-                            fontSize: 13,
+                                FontWeight.w700,
+                            fontSize: 12,
                           ),
                           children: [
                             TextSpan(
@@ -568,69 +595,89 @@ class GraficiScreen extends StatelessWidget {
                         ),
                       );
 
-                      // VALORI
                       for (final spot
                           in touchedSpots) {
                         final nome =
-                            spot.barIndex ==
-                                    0
+                            spot.barIndex == 0
                                 ? nome1
                                 : nome2;
 
-                        risultati.add(
+                        items.add(
                           LineTooltipItem(
-                            '$nome: '
+                            '$nome  '
                             '${spot.y.toStringAsFixed(1)}%',
-                            TextStyle(
-                              color:
-                                  spot.bar.color ??
-                                      Colors.white,
+                            const TextStyle(
+                              color: Colors.white,
                               fontWeight:
-                                  FontWeight.bold,
-                              fontSize: 12,
+                                  FontWeight.w600,
+                              fontSize: 11,
                             ),
                           ),
                         );
                       }
 
-                      return risultati;
+                      return items;
                     },
                   ),
                 ),
-
-                // ==================================================
-                // LINEE
-                // ==================================================
 
                 lineBarsData: [
                   LineChartBarData(
                     spots: spots1,
                     isCurved: true,
+                    curveSmoothness: 0.25,
                     barWidth: 3,
-                    color: Colors.blue,
-
-                    dotData:
-                        const FlDotData(
+                    color: primary,
+                    dotData: FlDotData(
                       show: true,
+                      getDotPainter:
+                          (
+                        spot,
+                        percent,
+                        bar,
+                        index,
+                      ) {
+                        return FlDotCirclePainter(
+                          radius: 3,
+                          color: primary,
+                        );
+                      },
                     ),
-
                     belowBarData:
                         BarAreaData(
-                      show: false,
+                      show: true,
+                      color: primary.withOpacity(
+                        0.045,
+                      ),
                     ),
                   ),
 
                   LineChartBarData(
                     spots: spots2,
                     isCurved: true,
-                    barWidth: 3,
-                    color: Colors.orange,
-
-                    dotData:
-                        const FlDotData(
-                      show: true,
+                    curveSmoothness: 0.25,
+                    barWidth: 2,
+                    color: const Color(
+                      0xFF9A9A9A,
                     ),
-
+                    dotData: FlDotData(
+                      show: true,
+                      getDotPainter:
+                          (
+                        spot,
+                        percent,
+                        bar,
+                        index,
+                      ) {
+                        return FlDotCirclePainter(
+                          radius: 2.5,
+                          color:
+                              const Color(
+                            0xFF9A9A9A,
+                          ),
+                        );
+                      },
+                    ),
                     belowBarData:
                         BarAreaData(
                       show: false,
@@ -644,62 +691,55 @@ class GraficiScreen extends StatelessWidget {
 
         const SizedBox(height: 12),
 
-        // ========================================================
-        // LEGENDA
-        // ========================================================
-
         Row(
           mainAxisAlignment:
               MainAxisAlignment.center,
           children: [
             _legenda(
-              colore: Colors.blue,
+              colore: primary,
               testo: nome1,
+              lineaSpessa: true,
             ),
-
-            const SizedBox(width: 25),
-
+            const SizedBox(width: 24),
             _legenda(
-              colore: Colors.orange,
+              colore: const Color(0xFF9A9A9A),
               testo: nome2,
+              lineaSpessa: false,
             ),
           ],
         ),
 
-        const SizedBox(height: 6),
+        const SizedBox(height: 8),
 
         Text(
-          'Tocca un punto per vedere il valore della partita',
+          'Tocca un punto per vedere i dettagli',
           style: TextStyle(
-            fontSize: 11,
+            fontSize: 10,
             color: Colors.grey.shade500,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ],
     );
   }
 
-  // ============================================================
-  // LEGENDA
-  // ============================================================
-
   Widget _legenda({
     required Color colore,
     required String testo,
+    required bool lineaSpessa,
   }) {
     return Row(
       children: [
         Container(
-          width: 10,
-          height: 10,
+          width: 18,
+          height: lineaSpessa ? 3 : 2,
           decoration: BoxDecoration(
             color: colore,
-            shape: BoxShape.circle,
+            borderRadius:
+                BorderRadius.circular(10),
           ),
         ),
-
-        const SizedBox(width: 6),
-
+        const SizedBox(width: 7),
         Text(
           testo,
           style: const TextStyle(
