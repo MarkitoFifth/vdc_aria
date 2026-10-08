@@ -277,24 +277,16 @@ class _PartitaRow extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(width: 6),
+          const SizedBox(width: 8),
 
           // =================================================
-          // RISULTATO
+          // FRECCETTA
           // =================================================
 
-          Text(
-            vinta ? 'V' : 'P',
-
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight:
-                  FontWeight.w900,
-
-              color: vinta
-                  ? const Color(0xFF248A49)
-                  : const Color(0xFFC63D3D),
-            ),
+          const Icon(
+            Icons.arrow_forward_ios_rounded,
+            size: 11,
+            color: Colors.black38,
           ),
         ],
       ),
