@@ -152,7 +152,7 @@ class AnalizzatoreStatistiche {
   }
 
   // ============================================================
-  // MEDIE / STATISTICHE COMPLESSIVE
+  // MEDIE - ATTACCO
   // ============================================================
 
   static double mediaKillPercentuale(List<Partita> partite) {
@@ -187,6 +187,38 @@ class AnalizzatoreStatistiche {
     return ((punti - errori - murati) / tentativi) * 100;
   }
 
+  static double mediaErroreAttacco(List<Partita> partite) {
+    int errori = 0;
+    int tentativi = 0;
+
+    for (final partita in partite) {
+      errori += partita.attacchi.attacchiErrori;
+      tentativi += partita.attacchi.attacchiEffettuati;
+    }
+
+    if (tentativi == 0) return 0;
+
+    return (errori / tentativi) * 100;
+  }
+
+  static double mediaMuratoAttacco(List<Partita> partite) {
+    int murati = 0;
+    int tentativi = 0;
+
+    for (final partita in partite) {
+      murati += partita.attacchi.attacchiMurati;
+      tentativi += partita.attacchi.attacchiEffettuati;
+    }
+
+    if (tentativi == 0) return 0;
+
+    return (murati / tentativi) * 100;
+  }
+
+  // ============================================================
+  // MEDIE - BATTUTA
+  // ============================================================
+
   static double mediaAcePercentuale(List<Partita> partite) {
     int ace = 0;
     int battute = 0;
@@ -216,6 +248,24 @@ class AnalizzatoreStatistiche {
 
     return ((ace - errori) / battute) * 100;
   }
+
+  static double mediaErroreBattuta(List<Partita> partite) {
+    int errori = 0;
+    int battute = 0;
+
+    for (final partita in partite) {
+      errori += partita.battuta.battuteErrori;
+      battute += partita.battuta.battuteEffettuate;
+    }
+
+    if (battute == 0) return 0;
+
+    return (errori / battute) * 100;
+  }
+
+  // ============================================================
+  // MEDIE - RICEZIONE
+  // ============================================================
 
   static double mediaPositivitaRicezione(List<Partita> partite) {
     int positive = 0;
@@ -247,6 +297,24 @@ class AnalizzatoreStatistiche {
     return ((positive - negative) / ricezioni) * 100;
   }
 
+  static double mediaErroreRicezione(List<Partita> partite) {
+    int errori = 0;
+    int ricezioni = 0;
+
+    for (final partita in partite) {
+      errori += partita.ricezione.ricezioniErrori;
+      ricezioni += partita.ricezione.ricezioniEffettuate;
+    }
+
+    if (ricezioni == 0) return 0;
+
+    return (errori / ricezioni) * 100;
+  }
+
+  // ============================================================
+  // MEDIE - DIFESA
+  // ============================================================
+
   static double mediaPositivitaDifesa(List<Partita> partite) {
     int positive = 0;
     int difese = 0;
@@ -277,6 +345,24 @@ class AnalizzatoreStatistiche {
     return ((positive - negative) / difese) * 100;
   }
 
+  static double mediaErroreDifesa(List<Partita> partite) {
+    int errori = 0;
+    int difese = 0;
+
+    for (final partita in partite) {
+      errori += partita.difesa.difeseErrore;
+      difese += partita.difesa.difeseEffettuate;
+    }
+
+    if (difese == 0) return 0;
+
+    return (errori / difese) * 100;
+  }
+
+  // ============================================================
+  // MEDIE - MURO
+  // ============================================================
+
   static double mediaBlockPercentuale(List<Partita> partite) {
     int muriPunto = 0;
     int muri = 0;
@@ -289,5 +375,35 @@ class AnalizzatoreStatistiche {
     if (muri == 0) return 0;
 
     return (muriPunto / muri) * 100;
+  }
+
+  static double mediaErroreMuro(List<Partita> partite) {
+    int errori = 0;
+    int muri = 0;
+
+    for (final partita in partite) {
+      errori += partita.muro.muriErrori;
+      muri += partita.muro.muriEffettuati;
+    }
+
+    if (muri == 0) return 0;
+
+    return (errori / muri) * 100;
+  }
+
+  static double mediaEfficienzaMuro(List<Partita> partite) {
+    int punti = 0;
+    int errori = 0;
+    int muri = 0;
+
+    for (final partita in partite) {
+      punti += partita.muro.muriPunto;
+      errori += partita.muro.muriErrori;
+      muri += partita.muro.muriEffettuati;
+    }
+
+    if (muri == 0) return 0;
+
+    return ((punti - errori) / muri) * 100;
   }
 }

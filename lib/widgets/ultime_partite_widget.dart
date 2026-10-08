@@ -12,7 +12,7 @@ class UltimePartiteWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ultimePartite =
-        archivioPartite.reversed.take(5).toList();
+        archivioPartite.reversed.take(3).toList();
 
     return GestureDetector(
       onTap: () {
@@ -26,12 +26,14 @@ class UltimePartiteWidget extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
+
         padding: const EdgeInsets.fromLTRB(
           18,
           18,
           18,
           15,
         ),
+
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
@@ -39,9 +41,14 @@ class UltimePartiteWidget extends StatelessWidget {
             color: const Color(0xFFEAEAEA),
           ),
         ),
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // =================================================
+            // HEADER
+            // =================================================
+
             Row(
               children: [
                 const Expanded(
@@ -54,13 +61,17 @@ class UltimePartiteWidget extends StatelessWidget {
                     ),
                   ),
                 ),
+
                 Container(
                   width: 28,
                   height: 28,
+
                   decoration: BoxDecoration(
                     color: const Color(0xFFF4F4F4),
-                    borderRadius: BorderRadius.circular(9),
+                    borderRadius:
+                        BorderRadius.circular(9),
                   ),
+
                   child: const Icon(
                     Icons.history_rounded,
                     size: 16,
@@ -70,130 +81,55 @@ class UltimePartiteWidget extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 14),
+            const SizedBox(height: 12),
 
-            if (ultimePartite.isEmpty)
-              const Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: 18,
-                ),
-                child: Text(
-                  'Nessuna partita',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.black54,
-                  ),
-                ),
-              )
-            else
-              ...ultimePartite.asMap().entries.map(
-                (entry) {
-                  final int index = entry.key;
-                  final partita = entry.value;
+            // =================================================
+            // PARTITE
+            // =================================================
 
-                  final bool vinta =
-                      partita.risultato.toUpperCase() ==
-                          'V';
-
-                  final String data =
-                      '${partita.data.day.toString().padLeft(2, '0')}/'
-                      '${partita.data.month.toString().padLeft(2, '0')}';
-
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              DettaglioPartitaScreen(
-                            partita: partita,
-                          ),
+            Expanded(
+              child: ultimePartite.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'Nessuna partita',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.black54,
                         ),
-                      );
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        bottom:
-                            index == ultimePartite.length - 1
-                                ? 0
-                                : 10,
                       ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 34,
-                            height: 34,
-                            decoration: BoxDecoration(
-                              color: vinta
-                                  ? const Color(0xFFEAF6EE)
-                                  : const Color(0xFFFBECEC),
-                              borderRadius:
-                                  BorderRadius.circular(11),
-                            ),
-                            child: Icon(
-                              vinta
-                                  ? Icons.check_rounded
-                                  : Icons.close_rounded,
-                              size: 17,
-                              color: vinta
-                                  ? const Color(0xFF248A49)
-                                  : const Color(0xFFC63D3D),
-                            ),
-                          ),
-
-                          const SizedBox(width: 9),
-
+                    )
+                  : Column(
+                      children: [
+                        for (int i = 0;
+                            i < ultimePartite.length;
+                            i++)
                           Expanded(
-                            child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  partita.avversario,
-                                  maxLines: 1,
-                                  overflow:
-                                      TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight:
-                                        FontWeight.w700,
+                            child: _PartitaRow(
+                              partita:
+                                  ultimePartite[i],
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        DettaglioPartitaScreen(
+                                      partita:
+                                          ultimePartite[i],
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  '$data • ${partita.categoria}',
-                                  style: TextStyle(
-                                    fontSize: 9.5,
-                                    color:
-                                        Colors.grey.shade600,
-                                    fontWeight:
-                                        FontWeight.w500,
-                                  ),
-                                ),
-                              ],
+                                );
+                              },
                             ),
                           ),
-
-                          const SizedBox(width: 6),
-
-                          Text(
-                            vinta ? 'V' : 'P',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w900,
-                              color: vinta
-                                  ? const Color(0xFF248A49)
-                                  : const Color(0xFFC63D3D),
-                            ),
-                          ),
-                        ],
-                      ),
+                      ],
                     ),
-                  );
-                },
-              ),
+            ),
 
-            const SizedBox(height: 11),
+            // =================================================
+            // FOOTER
+            // =================================================
+
+            const SizedBox(height: 8),
 
             Container(
               width: double.infinity,
@@ -201,7 +137,7 @@ class UltimePartiteWidget extends StatelessWidget {
               color: const Color(0xFFF0F0F0),
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 9),
 
             Row(
               mainAxisAlignment:
@@ -215,7 +151,9 @@ class UltimePartiteWidget extends StatelessWidget {
                     color: Colors.grey.shade700,
                   ),
                 ),
+
                 const SizedBox(width: 4),
+
                 const Icon(
                   Icons.arrow_forward_rounded,
                   size: 15,
@@ -225,6 +163,140 @@ class UltimePartiteWidget extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// =============================================================
+// RIGA SINGOLA PARTITA
+// =============================================================
+
+class _PartitaRow extends StatelessWidget {
+  final dynamic partita;
+  final VoidCallback onTap;
+
+  const _PartitaRow({
+    required this.partita,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final bool vinta =
+        partita.risultato.toUpperCase() == 'V';
+
+    final String data =
+        '${partita.data.day.toString().padLeft(2, '0')}/'
+        '${partita.data.month.toString().padLeft(2, '0')}';
+
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+
+      child: Row(
+        children: [
+          // =================================================
+          // V / P
+          // =================================================
+
+          Container(
+            width: 34,
+            height: 34,
+
+            decoration: BoxDecoration(
+              color: vinta
+                  ? const Color(0xFFEAF6EE)
+                  : const Color(0xFFFBECEC),
+
+              borderRadius:
+                  BorderRadius.circular(11),
+            ),
+
+            child: Icon(
+              vinta
+                  ? Icons.check_rounded
+                  : Icons.close_rounded,
+
+              size: 17,
+
+              color: vinta
+                  ? const Color(0xFF248A49)
+                  : const Color(0xFFC63D3D),
+            ),
+          ),
+
+          const SizedBox(width: 9),
+
+          // =================================================
+          // INFORMAZIONI
+          // =================================================
+
+          Expanded(
+            child: Column(
+              mainAxisAlignment:
+                  MainAxisAlignment.center,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+
+              children: [
+                Text(
+                  partita.avversario,
+
+                  maxLines: 1,
+
+                  overflow:
+                      TextOverflow.ellipsis,
+
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight:
+                        FontWeight.w700,
+                  ),
+                ),
+
+                const SizedBox(height: 2),
+
+                Text(
+                  '$data • ${partita.categoria}',
+
+                  maxLines: 1,
+
+                  overflow:
+                      TextOverflow.ellipsis,
+
+                  style: TextStyle(
+                    fontSize: 9.5,
+                    color:
+                        Colors.grey.shade600,
+                    fontWeight:
+                        FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(width: 6),
+
+          // =================================================
+          // RISULTATO
+          // =================================================
+
+          Text(
+            vinta ? 'V' : 'P',
+
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight:
+                  FontWeight.w900,
+
+              color: vinta
+                  ? const Color(0xFF248A49)
+                  : const Color(0xFFC63D3D),
+            ),
+          ),
+        ],
       ),
     );
   }

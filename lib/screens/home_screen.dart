@@ -389,35 +389,39 @@ class _HomeScreenState extends State<HomeScreen> {
                   // IMPORTANTE:
                   // niente "const" perché questo widget
                   // dipende dalle partite aggiornate.
+
                   UltimaPartitaWidget(),
 
-                  const SizedBox(height: 14),
+                  // Spazio ridotto da 14 a 8
+                  const SizedBox(height: 8),
 
                   // =================================================
                   // ULTIME PARTITE + MEDIE
                   // =================================================
 
-                  Row(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.stretch,
 
-                    children: [
-                      Expanded(
-                        flex: 45,
+                      children: [
+                        Expanded(
+                          flex: 45,
 
-                        child:
-                            UltimePartiteWidget(),
-                      ),
+                          child:
+                              UltimePartiteWidget(),
+                        ),
 
-                      const SizedBox(width: 14),
+                        const SizedBox(width: 14),
 
-                      Expanded(
-                        flex: 55,
+                        Expanded(
+                          flex: 55,
 
-                        child:
-                            MedieStatisticheWidget(),
-                      ),
-                    ],
+                          child:
+                              MedieStatisticheWidget(),
+                        ),
+                      ],
+                    ),
                   ),
 
                   const SizedBox(height: 14),
@@ -549,8 +553,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   decoration:
                       BoxDecoration(
-                    color:
-                        Colors.white,
+                    color: Colors.white,
 
                     borderRadius:
                         BorderRadius.circular(
@@ -599,18 +602,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           separatorBuilder:
                               (
-                                context,
-                                index,
-                              ) =>
+                            context,
+                            index,
+                          ) =>
                                   const SizedBox(
                             height: 5,
                           ),
 
                           itemBuilder:
                               (
-                                context,
-                                index,
-                              ) {
+                            context,
+                            index,
+                          ) {
                             final partita =
                                 risultati[
                                     index];
@@ -632,8 +635,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 13,
                               ),
 
-                              child:
-                                  InkWell(
+                              child: InkWell(
                                 borderRadius:
                                     BorderRadius
                                         .circular(
@@ -687,13 +689,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                         decoration:
                                             BoxDecoration(
-                                          color: vinta
-                                              ? const Color(
-                                                  0xFFEAF6EE,
-                                                )
-                                              : const Color(
-                                                  0xFFFBECEC,
-                                                ),
+                                          color:
+                                              vinta
+                                                  ? const Color(
+                                                      0xFFEAF6EE,
+                                                    )
+                                                  : const Color(
+                                                      0xFFFBECEC,
+                                                    ),
 
                                           borderRadius:
                                               BorderRadius
@@ -710,16 +713,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                               : Icons
                                                   .close_rounded,
 
-                                          size:
-                                              16,
+                                          size: 16,
 
-                                          color: vinta
-                                              ? const Color(
-                                                  0xFF248A49,
-                                                )
-                                              : const Color(
-                                                  0xFFC63D3D,
-                                                ),
+                                          color:
+                                              vinta
+                                                  ? const Color(
+                                                      0xFF248A49,
+                                                    )
+                                                  : const Color(
+                                                      0xFFC63D3D,
+                                                    ),
                                         ),
                                       ),
 
@@ -791,13 +794,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                               FontWeight
                                                   .w900,
 
-                                          color: vinta
-                                              ? const Color(
-                                                  0xFF248A49,
-                                                )
-                                              : const Color(
-                                                  0xFFC63D3D,
-                                                ),
+                                          color:
+                                              vinta
+                                                  ? const Color(
+                                                      0xFF248A49,
+                                                    )
+                                                  : const Color(
+                                                      0xFFC63D3D,
+                                                    ),
                                         ),
                                       ),
                                     ],

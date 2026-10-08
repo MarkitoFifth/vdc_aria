@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../dati_inseribili/dati.dart';
 import '../services/analizzatore_statistiche.dart';
+import 'dettaglio_punti_errori_screen.dart';
 
 class DettaglioPartitaScreen extends StatelessWidget {
   final Partita partita;
@@ -14,15 +15,12 @@ class DettaglioPartitaScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final punti =
-        AnalizzatoreStatistiche.calcolaPuntiTotali(
-      partita,
-    );
+        AnalizzatoreStatistiche.calcolaPuntiTotali(partita);
 
     final errori =
-        AnalizzatoreStatistiche.calcolaErroriTotali(
-      partita,
-    );
+        AnalizzatoreStatistiche.calcolaErroriTotali(partita);
 
+    // ATTACCO
     final kill =
         AnalizzatoreStatistiche.calcolaKillPercentuale(
       partita.attacchi,
@@ -33,23 +31,77 @@ class DettaglioPartitaScreen extends StatelessWidget {
       partita.attacchi,
     );
 
+    final erroreAttacco =
+        AnalizzatoreStatistiche.calcolaErroreAttacco(
+      partita.attacchi,
+    );
+
+    final muratoAttacco =
+        AnalizzatoreStatistiche.calcolaMuratoAttacco(
+      partita.attacchi,
+    );
+
+    // BATTUTA
     final ace =
         AnalizzatoreStatistiche.calcolaAcePercentuale(
       partita.battuta,
     );
 
+    final erroreBattuta =
+        AnalizzatoreStatistiche.calcolaErroreBattuta(
+      partita.battuta,
+    );
+
+    final effBattuta =
+        AnalizzatoreStatistiche.calcolaEfficienzaBattuta(
+      partita.battuta,
+    );
+
+    // RICEZIONE
     final ricezione =
         AnalizzatoreStatistiche.calcolaPositivitaRicezione(
       partita.ricezione,
     );
 
+    final erroreRicezione =
+        AnalizzatoreStatistiche.calcolaErroreRicezione(
+      partita.ricezione,
+    );
+
+    final effRicezione =
+        AnalizzatoreStatistiche.calcolaEfficienzaRicezione(
+      partita.ricezione,
+    );
+
+    // DIFESA
     final difesa =
         AnalizzatoreStatistiche.calcolaPositivitaDifesa(
       partita.difesa,
     );
 
+    final erroreDifesa =
+        AnalizzatoreStatistiche.calcolaErroreDifesa(
+      partita.difesa,
+    );
+
+    final effDifesa =
+        AnalizzatoreStatistiche.calcolaEfficienzaDifesa(
+      partita.difesa,
+    );
+
+    // MURO
     final muro =
         AnalizzatoreStatistiche.calcolaBlockPercentuale(
+      partita.muro,
+    );
+
+    final erroreMuro =
+        AnalizzatoreStatistiche.calcolaErroreMuro(
+      partita.muro,
+    );
+
+    final effMuro =
+        AnalizzatoreStatistiche.calcolaEfficienzaMuro(
       partita.muro,
     );
 
@@ -63,10 +115,8 @@ class DettaglioPartitaScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-
       appBar: AppBar(
-        backgroundColor:
-            const Color(0xFFF5F5F5),
+        backgroundColor: const Color(0xFFF5F5F5),
         elevation: 0,
         scrolledUnderElevation: 0,
         title: const Text(
@@ -77,7 +127,6 @@ class DettaglioPartitaScreen extends StatelessWidget {
           ),
         ),
       ),
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(
           16,
@@ -86,24 +135,21 @@ class DettaglioPartitaScreen extends StatelessWidget {
           30,
         ),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ============================
+            // ====================================================
             // HEADER PARTITA
-            // ============================
+            // ====================================================
 
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: const Color(0xFF111111),
-                borderRadius:
-                    BorderRadius.circular(22),
+                borderRadius: BorderRadius.circular(22),
               ),
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
@@ -111,24 +157,18 @@ class DettaglioPartitaScreen extends StatelessWidget {
                         width: 38,
                         height: 38,
                         decoration: BoxDecoration(
-                          color: Colors.white
-                              .withOpacity(0.10),
-                          borderRadius:
-                              BorderRadius.circular(12),
+                          color: Colors.white.withOpacity(0.10),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(
-                          Icons
-                              .sports_volleyball_rounded,
+                          Icons.sports_volleyball_rounded,
                           color: Colors.white,
                           size: 20,
                         ),
                       ),
-
                       const Spacer(),
-
                       Container(
-                        padding:
-                            const EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 10,
                           vertical: 6,
                         ),
@@ -136,22 +176,16 @@ class DettaglioPartitaScreen extends StatelessWidget {
                           color: vinta
                               ? const Color(0xFF1D3A29)
                               : const Color(0xFF3A2222),
-                          borderRadius:
-                              BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
                           vinta ? 'VINTA' : 'PERSA',
                           style: TextStyle(
                             fontSize: 10,
-                            fontWeight:
-                                FontWeight.w800,
+                            fontWeight: FontWeight.w800,
                             color: vinta
-                                ? const Color(
-                                    0xFF7FE09F,
-                                  )
-                                : const Color(
-                                    0xFFFF8F8F,
-                                  ),
+                                ? const Color(0xFF7FE09F)
+                                : const Color(0xFFFF8F8F),
                           ),
                         ),
                       ),
@@ -163,8 +197,7 @@ class DettaglioPartitaScreen extends StatelessWidget {
                   Text(
                     'VS ${partita.avversario.toUpperCase()}',
                     maxLines: 2,
-                    overflow:
-                        TextOverflow.ellipsis,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 26,
@@ -176,8 +209,7 @@ class DettaglioPartitaScreen extends StatelessWidget {
                   const SizedBox(height: 7),
 
                   Text(
-                    '${partita.categoria} • '
-                    '${partita.luogo}',
+                    '${partita.categoria} • ${partita.luogo}',
                     style: const TextStyle(
                       color: Colors.white70,
                       fontSize: 12,
@@ -200,9 +232,9 @@ class DettaglioPartitaScreen extends StatelessWidget {
 
             const SizedBox(height: 18),
 
-            // ============================
+            // ====================================================
             // TOTALI
-            // ============================
+            // ====================================================
 
             const _TitoloSezione(
               titolo: 'RISULTATO',
@@ -216,8 +248,27 @@ class DettaglioPartitaScreen extends StatelessWidget {
                   child: _TotaleCard(
                     valore: '$punti',
                     titolo: 'PUNTI',
-                    icona: Icons
-                        .add_circle_outline_rounded,
+                    icona: Icons.add_circle_outline_rounded,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              DettaglioPuntiErroriScreen(
+                            tipo: TipoDettaglio.punti,
+                            totale: punti,
+                            dettagli: {
+                              'Attacco':
+                                  partita.attacchi.attacchiPunto,
+                              'Battuta':
+                                  partita.battuta.battutePunto,
+                              'Muro':
+                                  partita.muro.muriPunto,
+                            },
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -225,8 +276,31 @@ class DettaglioPartitaScreen extends StatelessWidget {
                   child: _TotaleCard(
                     valore: '$errori',
                     titolo: 'ERRORI',
-                    icona: Icons
-                        .warning_amber_rounded,
+                    icona: Icons.warning_amber_rounded,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              DettaglioPuntiErroriScreen(
+                            tipo: TipoDettaglio.errori,
+                            totale: errori,
+                            dettagli: {
+                              'Attacco':
+                                  partita.attacchi.attacchiErrori,
+                              'Battuta':
+                                  partita.battuta.battuteErrori,
+                              'Ricezione':
+                                  partita.ricezione.ricezioniErrori,
+                              'Difesa':
+                                  partita.difesa.difeseErrore,
+                              'Muro':
+                                  partita.muro.muriErrori,
+                            },
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -234,94 +308,82 @@ class DettaglioPartitaScreen extends StatelessWidget {
 
             const SizedBox(height: 22),
 
-            // ============================
+            // ====================================================
             // ATTACCO
-            // ============================
+            // ====================================================
 
             _SezioneStatistica(
               titolo: 'ATTACCO',
               icona: Icons.flash_on_rounded,
               statistiche: [
-                _DatoStatistica(
-                  'Kill',
-                  kill,
-                ),
-                _DatoStatistica(
-                  'Efficienza',
-                  effAttacco,
-                ),
+                _DatoStatistica('Kill', kill),
+                _DatoStatistica('Efficienza', effAttacco),
+                _DatoStatistica('Errori', erroreAttacco),
+                _DatoStatistica('Murato', muratoAttacco),
               ],
             ),
 
             const SizedBox(height: 12),
 
-            // ============================
+            // ====================================================
             // BATTUTA
-            // ============================
+            // ====================================================
 
             _SezioneStatistica(
               titolo: 'BATTUTA',
-              icona: Icons
-                  .sports_volleyball_outlined,
+              icona: Icons.sports_volleyball_outlined,
               statistiche: [
-                _DatoStatistica(
-                  'Ace',
-                  ace,
-                ),
+                _DatoStatistica('Ace', ace),
+                _DatoStatistica('Efficienza', effBattuta),
+                _DatoStatistica('Errori', erroreBattuta),
               ],
             ),
 
             const SizedBox(height: 12),
 
-            // ============================
+            // ====================================================
             // RICEZIONE
-            // ============================
+            // ====================================================
 
             _SezioneStatistica(
               titolo: 'RICEZIONE',
-              icona: Icons
-                  .pan_tool_alt_outlined,
+              icona: Icons.pan_tool_alt_outlined,
               statistiche: [
-                _DatoStatistica(
-                  'Positività',
-                  ricezione,
-                ),
+                _DatoStatistica('Positività', ricezione),
+                _DatoStatistica('Efficienza', effRicezione),
+                _DatoStatistica('Errori', erroreRicezione),
               ],
             ),
 
             const SizedBox(height: 12),
 
-            // ============================
+            // ====================================================
             // DIFESA
-            // ============================
+            // ====================================================
 
             _SezioneStatistica(
               titolo: 'DIFESA',
-              icona: Icons
-                  .shield_outlined,
+              icona: Icons.shield_outlined,
               statistiche: [
-                _DatoStatistica(
-                  'Positività',
-                  difesa,
-                ),
+                _DatoStatistica('Positività', difesa),
+                _DatoStatistica('Efficienza', effDifesa),
+                _DatoStatistica('Errori', erroreDifesa),
               ],
             ),
 
             const SizedBox(height: 12),
 
-            // ============================
+            // ====================================================
             // MURO
-            // ============================
+            // ====================================================
 
             _SezioneStatistica(
               titolo: 'MURO',
-              icona: Icons
-                  .vertical_align_top_rounded,
+              icona: Icons.vertical_align_top_rounded,
               statistiche: [
-                _DatoStatistica(
-                  'Muri punto',
-                  muro,
-                ),
+                _DatoStatistica('Muri punto', muro),
+                _DatoStatistica('Efficienza', effMuro),
+                _DatoStatistica('Errori', erroreMuro),
               ],
             ),
           ],
@@ -355,65 +417,81 @@ class _TotaleCard extends StatelessWidget {
   final String valore;
   final String titolo;
   final IconData icona;
+  final VoidCallback onTap;
 
   const _TotaleCard({
     required this.valore,
     required this.titolo,
     required this.icona,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius:
-            BorderRadius.circular(18),
-        border: Border.all(
-          color: const Color(0xFFE8E8E8),
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF3F3F3),
-              borderRadius:
-                  BorderRadius.circular(11),
-            ),
-            child: Icon(
-              icona,
-              size: 18,
-              color: Colors.black54,
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(18),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(18),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: const Color(0xFFE8E8E8),
             ),
           ),
-          const SizedBox(width: 11),
-          Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Text(
-                valore,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w900,
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3F3F3),
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                child: Icon(
+                  icona,
+                  size: 18,
+                  color: Colors.black54,
                 ),
               ),
-              Text(
-                titolo,
-                style: TextStyle(
-                  fontSize: 9,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.grey.shade600,
-                  letterSpacing: 0.4,
+
+              const SizedBox(width: 11),
+
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      valore,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    Text(
+                      titolo,
+                      style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.grey.shade600,
+                        letterSpacing: 0.4,
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+
+              const Icon(
+                Icons.chevron_right_rounded,
+                size: 19,
+                color: Colors.black38,
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -429,8 +507,7 @@ class _DatoStatistica {
   );
 }
 
-class _SezioneStatistica
-    extends StatelessWidget {
+class _SezioneStatistica extends StatelessWidget {
   final String titolo;
   final IconData icona;
   final List<_DatoStatistica> statistiche;
@@ -448,8 +525,7 @@ class _SezioneStatistica
       padding: const EdgeInsets.all(17),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius:
-            BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(18),
         border: Border.all(
           color: const Color(0xFFE8E8E8),
         ),
@@ -463,8 +539,7 @@ class _SezioneStatistica
                 height: 32,
                 decoration: BoxDecoration(
                   color: const Color(0xFFF3F3F3),
-                  borderRadius:
-                      BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
                   icona,
@@ -486,32 +561,40 @@ class _SezioneStatistica
 
           const SizedBox(height: 14),
 
-          ...statistiche.map(
-            (statistica) => Padding(
-              padding:
-                  const EdgeInsets.only(bottom: 9),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      statistica.titolo,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade700,
-                        fontWeight: FontWeight.w600,
+          ...statistiche.asMap().entries.map(
+            (entry) {
+              final bool ultima =
+                  entry.key == statistiche.length - 1;
+
+              final statistica = entry.value;
+
+              return Padding(
+                padding: EdgeInsets.only(
+                  bottom: ultima ? 0 : 9,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        statistica.titolo,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade700,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                  ),
-                  Text(
-                    '${statistica.valore.toStringAsFixed(1)}%',
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w900,
+                    Text(
+                      '${statistica.valore.toStringAsFixed(1)}%',
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
+                  ],
+                ),
+              );
+            },
           ),
         ],
       ),

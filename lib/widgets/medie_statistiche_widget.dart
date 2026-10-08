@@ -43,7 +43,12 @@ class MedieStatisticheWidget extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
+        padding: const EdgeInsets.fromLTRB(
+          18,
+          18,
+          18,
+          15,
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
@@ -54,6 +59,10 @@ class MedieStatisticheWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // =================================================
+            // HEADER
+            // =================================================
+
             Row(
               children: [
                 const Expanded(
@@ -83,35 +92,51 @@ class MedieStatisticheWidget extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
 
-            _StatisticaMedia(
-              titolo: 'Kill',
-              valore: kill,
-            ),
-            _StatisticaMedia(
-              titolo: 'Eff. attacco',
-              valore: effAttacco,
-            ),
-            _StatisticaMedia(
-              titolo: 'Ace',
-              valore: ace,
-            ),
-            _StatisticaMedia(
-              titolo: 'Ricezione',
-              valore: ricezione,
-            ),
-            _StatisticaMedia(
-              titolo: 'Difesa',
-              valore: difesa,
-            ),
-            _StatisticaMedia(
-              titolo: 'Muro',
-              valore: muro,
-              ultima: true,
+            // =================================================
+            // CONTENUTO
+            // =================================================
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
+                children: [
+                  _StatisticaMedia(
+                    titolo: 'Kill',
+                    valore: kill,
+                  ),
+                  _StatisticaMedia(
+                    titolo: 'Eff. attacco',
+                    valore: effAttacco,
+                  ),
+                  _StatisticaMedia(
+                    titolo: 'Ace',
+                    valore: ace,
+                  ),
+                  _StatisticaMedia(
+                    titolo: 'Ricezione',
+                    valore: ricezione,
+                  ),
+                  _StatisticaMedia(
+                    titolo: 'Difesa',
+                    valore: difesa,
+                  ),
+                  _StatisticaMedia(
+                    titolo: 'Muro',
+                    valore: muro,
+                    ultima: true,
+                  ),
+                ],
+              ),
             ),
 
-            const SizedBox(height: 8),
+            // =================================================
+            // FOOTER
+            // =================================================
+
+            const SizedBox(height: 11),
 
             Container(
               width: double.infinity,
@@ -122,7 +147,8 @@ class MedieStatisticheWidget extends StatelessWidget {
             const SizedBox(height: 10),
 
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment:
+                  MainAxisAlignment.end,
               children: [
                 Text(
                   'Analisi completa',
@@ -176,7 +202,6 @@ class _StatisticaMedia extends StatelessWidget {
               ),
             ),
           ),
-
           Text(
             '${valore.toStringAsFixed(1)}%',
             style: const TextStyle(

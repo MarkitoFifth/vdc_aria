@@ -101,6 +101,59 @@ class _ScoutPartitaScreenState
       TextEditingController();
 
   // =========================
+  // LISTA CAMPI
+  // =========================
+
+  late final List<TextEditingController> tuttiICampi = [
+    attacchiEffettuati,
+    attacchiPunto,
+    attacchiErrori,
+    attacchiMurati,
+
+    battuteEffettuate,
+    battutePunto,
+    battuteErrori,
+
+    ricezioniEffettuate,
+    ricezioniPositive,
+    ricezioniNegative,
+    ricezioniErrori,
+
+    muriEffettuati,
+    muriPunto,
+    muriErrori,
+
+    difeseEffettuate,
+    difesePositive,
+    difeseNegative,
+    difeseErrori,
+  ];
+
+  // =========================
+  // CONTROLLO CAMPI
+  // =========================
+
+  bool get datiValidi {
+    for (final controller in tuttiICampi) {
+      final testo = controller.text.trim();
+
+      if (testo.isEmpty) {
+        continue;
+      }
+
+      if (int.tryParse(testo) == null) {
+        return false;
+      }
+
+      if (int.tryParse(testo)! < 0) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  // =========================
   // CONVERSIONE VALORI
   // =========================
 
@@ -118,6 +171,10 @@ class _ScoutPartitaScreenState
   // =========================
 
   Future<void> salvaPartita() async {
+    if (!datiValidi) {
+      return;
+    }
+
     final Partita nuovaPartita = Partita(
       avversario: widget.avversario,
       categoria: widget.categoria,
@@ -228,6 +285,10 @@ class _ScoutPartitaScreenState
       ),
       child: TextField(
         controller: controller,
+
+        onChanged: (_) {
+          setState(() {});
+        },
 
         keyboardType:
             const TextInputType.numberWithOptions(
@@ -382,6 +443,8 @@ class _ScoutPartitaScreenState
   Widget build(BuildContext context) {
     final bool partitaVinta =
         widget.risultato == 'V';
+
+    final bool validi = datiValidi;
 
     return Scaffold(
       backgroundColor:
@@ -823,6 +886,55 @@ class _ScoutPartitaScreenState
               ),
 
               // =========================
+              // AVVISO ERRORE
+              // =========================
+
+              if (!validi) ...[
+                const SizedBox(height: 2),
+
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(
+                    bottom: 10,
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 11,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFEEEE),
+                    borderRadius:
+                        BorderRadius.circular(14),
+                    border: Border.all(
+                      color: const Color(0xFFFFD0D0),
+                    ),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.error_outline_rounded,
+                        size: 18,
+                        color: Color(0xFFD64545),
+                      ),
+                      SizedBox(width: 9),
+                      Expanded(
+                        child: Text(
+                          'Inserisci solo numeri nei campi dello scout.',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFFD64545),
+                            fontWeight:
+                                FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+
+              // =========================
               // SALVA
               // =========================
 
@@ -833,7 +945,8 @@ class _ScoutPartitaScreenState
                 height: 56,
 
                 child: FilledButton.icon(
-                  onPressed: salvaPartita,
+                  onPressed:
+                      validi ? salvaPartita : null,
 
                   icon: const Icon(
                     Icons.check_rounded,
@@ -853,8 +966,12 @@ class _ScoutPartitaScreenState
                       FilledButton.styleFrom(
                     backgroundColor:
                         Colors.black,
+                    disabledBackgroundColor:
+                        const Color(0xFFD5D5D5),
                     foregroundColor:
                         Colors.white,
+                    disabledForegroundColor:
+                        const Color(0xFF8A8A8A),
                     shape:
                         RoundedRectangleBorder(
                       borderRadius:
