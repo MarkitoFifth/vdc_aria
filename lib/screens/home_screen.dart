@@ -25,6 +25,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String _ricerca = '';
 
+  // =========================================================
+  // SELEZIONE STAGIONE
+  // =========================================================
+
   Future<void> apriSelezioneStagione() async {
     await Navigator.push(
       context,
@@ -39,6 +43,10 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
+  // =========================================================
+  // NUOVA PARTITA
+  // =========================================================
+
   Future<void> apriNuovaPartita() async {
     await Navigator.push(
       context,
@@ -50,14 +58,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (!mounted) return;
 
+    // Forza la Home a rileggere i dati aggiornati
+    // da ArchivioStagioni.stagioneAttiva.partite.
     setState(() {});
   }
+
+  // =========================================================
+  // DISPOSE
+  // =========================================================
 
   @override
   void dispose() {
     _ricercaController.dispose();
     super.dispose();
   }
+
+  // =========================================================
+  // BUILD
+  // =========================================================
 
   @override
   Widget build(BuildContext context) {
@@ -86,43 +104,67 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
 
+      // =====================================================
+      // APP BAR
+      // =====================================================
+
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor:
+            const Color(0xFFF5F5F5),
+
         elevation: 0,
+
         scrolledUnderElevation: 0,
+
         toolbarHeight: 64,
+
         titleSpacing: 16,
 
         title: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment:
+              CrossAxisAlignment.center,
+
           children: [
-            // ==================================================
+            // =================================================
             // PARTITE
-            // ==================================================
+            // =================================================
 
             Container(
               height: 42,
-              padding: const EdgeInsets.symmetric(
+
+              padding:
+                  const EdgeInsets.symmetric(
                 horizontal: 12,
               ),
+
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(13),
+                borderRadius:
+                    BorderRadius.circular(13),
               ),
+
               child: Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize:
+                    MainAxisSize.min,
+
                 children: [
                   const Icon(
-                    Icons.sports_volleyball_rounded,
+                    Icons
+                        .sports_volleyball_rounded,
                     size: 17,
                     color: Colors.black54,
                   ),
+
                   const SizedBox(width: 7),
+
                   Text(
                     '$numeroPartite PARTITE',
-                    style: const TextStyle(
+
+                    style:
+                        const TextStyle(
                       fontSize: 12,
-                      fontWeight: FontWeight.w800,
+                      fontWeight:
+                          FontWeight.w800,
                       letterSpacing: 0.4,
                     ),
                   ),
@@ -132,15 +174,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(width: 8),
 
-            // ==================================================
+            // =================================================
             // RICERCA
-            // ==================================================
+            // =================================================
 
             Expanded(
               child: SizedBox(
                 height: 42,
+
                 child: TextField(
-                  controller: _ricercaController,
+                  controller:
+                      _ricercaController,
 
                   onChanged: (valore) {
                     setState(() {
@@ -151,21 +195,29 @@ class _HomeScreenState extends State<HomeScreen> {
                   textAlignVertical:
                       TextAlignVertical.center,
 
-                  style: const TextStyle(
+                  style:
+                      const TextStyle(
                     fontSize: 12,
-                    fontWeight: FontWeight.w600,
+                    fontWeight:
+                        FontWeight.w600,
                   ),
 
-                  decoration: InputDecoration(
-                    hintText: 'Cerca partita...',
+                  decoration:
+                      InputDecoration(
+                    hintText:
+                        'Cerca partita...',
 
-                    hintStyle: TextStyle(
-                      color: Colors.grey.shade500,
+                    hintStyle:
+                        TextStyle(
+                      color:
+                          Colors.grey.shade500,
                       fontSize: 12,
-                      fontWeight: FontWeight.w500,
+                      fontWeight:
+                          FontWeight.w500,
                     ),
 
-                    prefixIcon: const Icon(
+                    prefixIcon:
+                        const Icon(
                       Icons.search_rounded,
                       size: 18,
                       color: Colors.black54,
@@ -176,11 +228,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             ? IconButton(
                                 tooltip:
                                     'Cancella ricerca',
-                                padding: EdgeInsets.zero,
-                                icon: const Icon(
-                                  Icons.close_rounded,
+
+                                padding:
+                                    EdgeInsets.zero,
+
+                                icon:
+                                    const Icon(
+                                  Icons
+                                      .close_rounded,
                                   size: 17,
                                 ),
+
                                 onPressed: () {
                                   _ricercaController
                                       .clear();
@@ -193,33 +251,46 @@ class _HomeScreenState extends State<HomeScreen> {
                             : null,
 
                     filled: true,
-                    fillColor: Colors.white,
+
+                    fillColor:
+                        Colors.white,
 
                     contentPadding:
-                        const EdgeInsets.symmetric(
+                        const EdgeInsets
+                            .symmetric(
                       horizontal: 12,
                     ),
 
-                    border: OutlineInputBorder(
+                    border:
+                        OutlineInputBorder(
                       borderRadius:
-                          BorderRadius.circular(13),
-                      borderSide: BorderSide.none,
+                          BorderRadius.circular(
+                        13,
+                      ),
+                      borderSide:
+                          BorderSide.none,
                     ),
 
                     enabledBorder:
                         OutlineInputBorder(
                       borderRadius:
-                          BorderRadius.circular(13),
-                      borderSide: BorderSide.none,
+                          BorderRadius.circular(
+                        13,
+                      ),
+                      borderSide:
+                          BorderSide.none,
                     ),
 
                     focusedBorder:
                         OutlineInputBorder(
                       borderRadius:
-                          BorderRadius.circular(13),
+                          BorderRadius.circular(
+                        13,
+                      ),
                       borderSide:
                           const BorderSide(
-                        color: Color(0xFF111111),
+                        color:
+                            Color(0xFF111111),
                         width: 1,
                       ),
                     ),
@@ -230,39 +301,50 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(width: 8),
 
-            // ==================================================
+            // =================================================
             // STAGIONE
-            // ==================================================
+            // =================================================
 
             SizedBox(
               height: 42,
+
               child: TextButton.icon(
                 onPressed:
                     apriSelezioneStagione,
 
                 icon: const Icon(
-                  Icons.keyboard_arrow_down_rounded,
+                  Icons
+                      .keyboard_arrow_down_rounded,
                   size: 18,
                 ),
 
                 label: Text(
                   stagione.nome,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
+
+                  style:
+                      const TextStyle(
+                    fontWeight:
+                        FontWeight.w700,
                     fontSize: 12,
                   ),
                 ),
 
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  backgroundColor: Colors.white,
+                style:
+                    TextButton.styleFrom(
+                  foregroundColor:
+                      Colors.black,
+
+                  backgroundColor:
+                      Colors.white,
 
                   padding:
-                      const EdgeInsets.symmetric(
+                      const EdgeInsets
+                          .symmetric(
                     horizontal: 11,
                   ),
 
-                  minimumSize: Size.zero,
+                  minimumSize:
+                      Size.zero,
 
                   tapTargetSize:
                       MaterialTapTargetSize
@@ -271,7 +353,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   shape:
                       RoundedRectangleBorder(
                     borderRadius:
-                        BorderRadius.circular(13),
+                        BorderRadius.circular(
+                      13,
+                    ),
                   ),
                 ),
               ),
@@ -280,9 +364,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
 
-      // ======================================================
+      // =====================================================
       // BODY
-      // ======================================================
+      // =====================================================
 
       body: SafeArea(
         child: Stack(
@@ -298,9 +382,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
               child: Column(
                 children: [
-                  const UltimaPartitaWidget(),
+                  // =================================================
+                  // ULTIMA PARTITA
+                  // =================================================
+
+                  // IMPORTANTE:
+                  // niente "const" perché questo widget
+                  // dipende dalle partite aggiornate.
+                  UltimaPartitaWidget(),
 
                   const SizedBox(height: 14),
+
+                  // =================================================
+                  // ULTIME PARTITE + MEDIE
+                  // =================================================
 
                   Row(
                     crossAxisAlignment:
@@ -309,46 +404,63 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Expanded(
                         flex: 45,
+
                         child:
-                            const UltimePartiteWidget(),
+                            UltimePartiteWidget(),
                       ),
 
                       const SizedBox(width: 14),
 
                       Expanded(
                         flex: 55,
+
                         child:
-                            const MedieStatisticheWidget(),
+                            MedieStatisticheWidget(),
                       ),
                     ],
                   ),
 
                   const SizedBox(height: 14),
 
-                  const GraficoAndamentoWidget(),
+                  // =================================================
+                  // GRAFICO
+                  // =================================================
+
+                  GraficoAndamentoWidget(),
 
                   const SizedBox(height: 18),
 
-                  // ==================================================
+                  // =================================================
                   // NUOVA PARTITA
-                  // ==================================================
+                  // =================================================
 
                   GestureDetector(
-                    onTap: apriNuovaPartita,
+                    onTap:
+                        apriNuovaPartita,
 
                     child: Container(
-                      width: double.infinity,
+                      width:
+                          double.infinity,
+
                       height: 58,
 
                       padding:
-                          const EdgeInsets.symmetric(
+                          const EdgeInsets
+                              .symmetric(
                         horizontal: 16,
                       ),
 
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF111111),
+                      decoration:
+                          BoxDecoration(
+                        color:
+                            const Color(
+                          0xFF111111,
+                        ),
+
                         borderRadius:
-                            BorderRadius.circular(18),
+                            BorderRadius.circular(
+                          18,
+                        ),
                       ),
 
                       child: Row(
@@ -359,32 +471,44 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             decoration:
                                 BoxDecoration(
-                              color: Colors.white
-                                  .withOpacity(0.12),
+                              color: Colors
+                                  .white
+                                  .withOpacity(
+                                0.12,
+                              ),
 
                               borderRadius:
-                                  BorderRadius.circular(
+                                  BorderRadius
+                                      .circular(
                                 11,
                               ),
                             ),
 
-                            child: const Icon(
+                            child:
+                                const Icon(
                               Icons.add_rounded,
-                              color: Colors.white,
+                              color:
+                                  Colors.white,
                               size: 21,
                             ),
                           ),
 
-                          const SizedBox(width: 12),
+                          const SizedBox(
+                            width: 12,
+                          ),
 
                           const Expanded(
                             child: Text(
                               'Nuova partita',
-                              style: TextStyle(
-                                color: Colors.white,
+
+                              style:
+                                  TextStyle(
+                                color:
+                                    Colors.white,
                                 fontSize: 15,
                                 fontWeight:
-                                    FontWeight.w700,
+                                    FontWeight
+                                        .w700,
                               ),
                             ),
                           ),
@@ -392,8 +516,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           Icon(
                             Icons
                                 .arrow_forward_rounded,
-                            color: Colors.white
-                                .withOpacity(0.75),
+                            color: Colors
+                                .white
+                                .withOpacity(
+                              0.75,
+                            ),
                             size: 19,
                           ),
                         ],
@@ -404,9 +531,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // ======================================================
+            // =====================================================
             // RISULTATI RICERCA
-            // ======================================================
+            // =====================================================
 
             if (_ricerca.isNotEmpty)
               Positioned(
@@ -420,37 +547,50 @@ class _HomeScreenState extends State<HomeScreen> {
                     maxHeight: 400,
                   ),
 
-                  decoration: BoxDecoration(
-                    color: Colors.white,
+                  decoration:
+                      BoxDecoration(
+                    color:
+                        Colors.white,
+
                     borderRadius:
-                        BorderRadius.circular(18),
+                        BorderRadius.circular(
+                      18,
+                    ),
 
                     border: Border.all(
                       color:
-                          const Color(0xFFE8E8E8),
+                          const Color(
+                        0xFFE8E8E8,
+                      ),
                     ),
                   ),
 
                   child: risultati.isEmpty
                       ? const Padding(
                           padding:
-                              EdgeInsets.all(20),
+                              EdgeInsets.all(
+                            20,
+                          ),
 
                           child: Text(
                             'Nessuna partita trovata.',
-                            style: TextStyle(
+
+                            style:
+                                TextStyle(
                               fontSize: 13,
                               fontWeight:
-                                  FontWeight.w600,
+                                  FontWeight
+                                      .w600,
                             ),
                           ),
                         )
-
                       : ListView.separated(
-                          shrinkWrap: true,
+                          shrinkWrap:
+                              true,
 
                           padding:
-                              const EdgeInsets.all(
+                              const EdgeInsets
+                                  .all(
                             10,
                           ),
 
@@ -458,15 +598,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               risultati.length,
 
                           separatorBuilder:
-                              (context, index) =>
+                              (
+                                context,
+                                index,
+                              ) =>
                                   const SizedBox(
                             height: 5,
                           ),
 
                           itemBuilder:
-                              (context, index) {
+                              (
+                                context,
+                                index,
+                              ) {
                             final partita =
-                                risultati[index];
+                                risultati[
+                                    index];
 
                             final bool vinta =
                                 partita.risultato
@@ -480,23 +627,30 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
 
                               borderRadius:
-                                  BorderRadius.circular(
+                                  BorderRadius
+                                      .circular(
                                 13,
                               ),
 
-                              child: InkWell(
+                              child:
+                                  InkWell(
                                 borderRadius:
-                                    BorderRadius.circular(
+                                    BorderRadius
+                                        .circular(
                                   13,
                                 ),
 
-                                onTap: () async {
-                                  await Navigator.push(
+                                onTap:
+                                    () async {
+                                  await Navigator
+                                      .push(
                                     context,
                                     MaterialPageRoute(
                                       builder:
-                                          (context) =>
-                                              DettaglioPartitaScreen(
+                                          (
+                                        context,
+                                      ) =>
+                                          DettaglioPartitaScreen(
                                         partita:
                                             partita,
                                       ),
@@ -507,22 +661,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                     return;
                                   }
 
-                                  setState(() {});
+                                  setState(
+                                    () {},
+                                  );
                                 },
 
-                                child: Padding(
+                                child:
+                                    Padding(
                                   padding:
                                       const EdgeInsets
                                           .symmetric(
-                                    horizontal: 12,
-                                    vertical: 11,
+                                    horizontal:
+                                        12,
+                                    vertical:
+                                        11,
                                   ),
 
                                   child: Row(
                                     children: [
                                       Container(
-                                        width: 32,
-                                        height: 32,
+                                        width:
+                                            32,
+                                        height:
+                                            32,
 
                                         decoration:
                                             BoxDecoration(
@@ -541,14 +702,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
 
-                                        child: Icon(
+                                        child:
+                                            Icon(
                                           vinta
                                               ? Icons
                                                   .check_rounded
                                               : Icons
                                                   .close_rounded,
 
-                                          size: 16,
+                                          size:
+                                              16,
 
                                           color: vinta
                                               ? const Color(
@@ -565,7 +728,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
 
                                       Expanded(
-                                        child: Column(
+                                        child:
+                                            Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment
                                                   .start,
@@ -574,7 +738,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             Text(
                                               'vs ${partita.avversario}',
 
-                                              maxLines: 1,
+                                              maxLines:
+                                                  1,
 
                                               overflow:
                                                   TextOverflow
@@ -582,7 +747,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                               style:
                                                   const TextStyle(
-                                                fontSize: 13,
+                                                fontSize:
+                                                    13,
                                                 fontWeight:
                                                     FontWeight
                                                         .w800,
@@ -590,7 +756,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
 
                                             const SizedBox(
-                                              height: 3,
+                                              height:
+                                                  3,
                                             ),
 
                                             Text(
@@ -598,10 +765,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                               style:
                                                   TextStyle(
-                                                fontSize: 10,
-                                                color: Colors
-                                                    .grey
-                                                    .shade600,
+                                                fontSize:
+                                                    10,
+                                                color:
+                                                    Colors
+                                                        .grey
+                                                        .shade600,
                                               ),
                                             ),
                                           ],
@@ -613,10 +782,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ? 'V'
                                             : 'P',
 
-                                        style: TextStyle(
-                                          fontSize: 12,
+                                        style:
+                                            TextStyle(
+                                          fontSize:
+                                              12,
+
                                           fontWeight:
-                                              FontWeight.w900,
+                                              FontWeight
+                                                  .w900,
 
                                           color: vinta
                                               ? const Color(

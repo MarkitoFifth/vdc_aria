@@ -21,20 +21,456 @@ class _NuovaPartitaScreenState
 
   DateTime? dataSelezionata;
 
+  // =========================================================
+  // SELEZIONE DATA
+  // =========================================================
+
   Future<void> selezionaData() async {
-    final DateTime? data = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2100),
+    final oggi = DateTime.now();
+
+    DateTime meseVisualizzato = DateTime(
+      dataSelezionata?.year ?? oggi.year,
+      dataSelezionata?.month ?? oggi.month,
     );
 
-    if (data != null) {
+    DateTime? dataTemporanea = dataSelezionata;
+
+    final DateTime? risultato =
+        await showModalBottomSheet<DateTime>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            final giorniNelMese = DateUtils.getDaysInMonth(
+              meseVisualizzato.year,
+              meseVisualizzato.month,
+            );
+
+            final primoGiorno = DateTime(
+              meseVisualizzato.year,
+              meseVisualizzato.month,
+              1,
+            );
+
+            // Lunedì = 0 ... Domenica = 6
+            final offset =
+                (primoGiorno.weekday - 1) % 7;
+
+            return SafeArea(
+              child: Container(
+                margin: const EdgeInsets.only(top: 70),
+                padding: const EdgeInsets.fromLTRB(
+                  20,
+                  12,
+                  20,
+                  24,
+                ),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF5F6F8),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(28),
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+
+                    // =================================================
+                    // INDICATORE
+                    // =================================================
+
+                    Container(
+                      width: 42,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Colors.black12,
+                        borderRadius:
+                            BorderRadius.circular(10),
+                      ),
+                    ),
+
+                    const SizedBox(height: 22),
+
+                    // =================================================
+                    // HEADER
+                    // =================================================
+
+                    Row(
+                      children: [
+                        const Expanded(
+                          child: Text(
+                            'Seleziona la data',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                        ),
+
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            width: 38,
+                            height: 38,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.circular(12),
+                            ),
+                            child: const Icon(
+                              Icons.close,
+                              size: 20,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 6),
+
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        dataTemporanea == null
+                            ? 'Scegli quando si è giocata la partita'
+                            : _dataCompleta(
+                                dataTemporanea!,
+                              ),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey.shade600,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 22),
+
+                    // =================================================
+                    // MESE
+                    // =================================================
+
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:
+                            BorderRadius.circular(18),
+                      ),
+                      child: Row(
+                        children: [
+
+                          GestureDetector(
+                            onTap: () {
+                              setModalState(() {
+                                meseVisualizzato = DateTime(
+                                  meseVisualizzato.year,
+                                  meseVisualizzato.month - 1,
+                                );
+                              });
+                            },
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color:
+                                    const Color(0xFFF5F6F8),
+                                borderRadius:
+                                    BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.chevron_left,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
+
+                          Expanded(
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    _nomeMese(
+                                      meseVisualizzato.month,
+                                    ),
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                      fontWeight:
+                                          FontWeight.w800,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    '${meseVisualizzato.year}',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color:
+                                          Colors.grey.shade500,
+                                      fontWeight:
+                                          FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          GestureDetector(
+                            onTap: () {
+                              setModalState(() {
+                                meseVisualizzato = DateTime(
+                                  meseVisualizzato.year,
+                                  meseVisualizzato.month + 1,
+                                );
+                              });
+                            },
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color:
+                                    const Color(0xFFF5F6F8),
+                                borderRadius:
+                                    BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.chevron_right,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // =================================================
+                    // CALENDARIO
+                    // =================================================
+
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(
+                        14,
+                        16,
+                        14,
+                        14,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:
+                            BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        children: [
+
+                          // Giorni settimana
+                          Row(
+                            children: const [
+                              _GiornoSettimana('L'),
+                              _GiornoSettimana('M'),
+                              _GiornoSettimana('M'),
+                              _GiornoSettimana('G'),
+                              _GiornoSettimana('V'),
+                              _GiornoSettimana('S'),
+                              _GiornoSettimana('D'),
+                            ],
+                          ),
+
+                          const SizedBox(height: 8),
+
+                          // Giorni
+                          ...List.generate(
+                            ((offset + giorniNelMese) / 7)
+                                .ceil(),
+                            (settimana) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.only(
+                                  bottom: 4,
+                                ),
+                                child: Row(
+                                  children:
+                                      List.generate(
+                                    7,
+                                    (giornoSettimana) {
+                                      final indice =
+                                          settimana * 7 +
+                                              giornoSettimana;
+
+                                      final giorno =
+                                          indice - offset + 1;
+
+                                      if (giorno < 1 ||
+                                          giorno >
+                                              giorniNelMese) {
+                                        return const Expanded(
+                                          child: SizedBox(
+                                            height: 44,
+                                          ),
+                                        );
+                                      }
+
+                                      final data = DateTime(
+                                        meseVisualizzato.year,
+                                        meseVisualizzato.month,
+                                        giorno,
+                                      );
+
+                                      final selezionato =
+                                          dataTemporanea !=
+                                                  null &&
+                                              _stessaData(
+                                                dataTemporanea!,
+                                                data,
+                                              );
+
+                                      final oggiSelezionato =
+                                          _stessaData(
+                                        oggi,
+                                        data,
+                                      );
+
+                                      return Expanded(
+                                        child:
+                                            GestureDetector(
+                                          onTap: () {
+                                            setModalState(() {
+                                              dataTemporanea =
+                                                  data;
+                                            });
+                                          },
+                                          child: Container(
+                                            height: 44,
+                                            margin:
+                                                const EdgeInsets
+                                                    .all(2),
+                                            decoration:
+                                                BoxDecoration(
+                                              color: selezionato
+                                                  ? Colors.black
+                                                  : Colors
+                                                      .transparent,
+                                              borderRadius:
+                                                  BorderRadius
+                                                      .circular(
+                                                13,
+                                              ),
+                                              border:
+                                                  oggiSelezionato &&
+                                                          !selezionato
+                                                      ? Border.all(
+                                                          color:
+                                                              Colors.black26,
+                                                          width:
+                                                              1.2,
+                                                        )
+                                                      : null,
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                '$giorno',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight:
+                                                      selezionato
+                                                          ? FontWeight
+                                                              .w800
+                                                          : FontWeight
+                                                              .w600,
+                                                  color:
+                                                      selezionato
+                                                          ? Colors.white
+                                                          : Colors
+                                                              .black87,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // =================================================
+                    // CONFERMA
+                    // =================================================
+
+                    SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: ElevatedButton(
+                        onPressed:
+                            dataTemporanea == null
+                                ? null
+                                : () {
+                                    Navigator.pop(
+                                      context,
+                                      dataTemporanea,
+                                    );
+                                  },
+                        style:
+                            ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          foregroundColor: Colors.white,
+                          disabledBackgroundColor:
+                              Colors.grey.shade300,
+                          disabledForegroundColor:
+                              Colors.grey.shade500,
+                          elevation: 0,
+                          shape:
+                              RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(17),
+                          ),
+                        ),
+                        child: const Text(
+                          'CONFERMA DATA',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.4,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+
+    if (risultato != null && mounted) {
       setState(() {
-        dataSelezionata = data;
+        dataSelezionata = risultato;
       });
     }
   }
+
+  // =========================================================
+  // CONTINUA SCOUTING
+  // =========================================================
 
   void continuaScouting() {
     if (avversarioController.text.trim().isEmpty) {
@@ -78,6 +514,10 @@ class _NuovaPartitaScreenState
     );
   }
 
+  // =========================================================
+  // DATA FORMATTATA
+  // =========================================================
+
   String dataFormattata() {
     if (dataSelezionata == null) {
       return 'Seleziona la data';
@@ -86,6 +526,40 @@ class _NuovaPartitaScreenState
     return '${dataSelezionata!.day.toString().padLeft(2, '0')}/'
         '${dataSelezionata!.month.toString().padLeft(2, '0')}/'
         '${dataSelezionata!.year}';
+  }
+
+  String _dataCompleta(DateTime data) {
+    return '${data.day.toString().padLeft(2, '0')} '
+        '${_nomeMese(data.month)} '
+        '${data.year}';
+  }
+
+  String _nomeMese(int mese) {
+    const mesi = [
+      'Gennaio',
+      'Febbraio',
+      'Marzo',
+      'Aprile',
+      'Maggio',
+      'Giugno',
+      'Luglio',
+      'Agosto',
+      'Settembre',
+      'Ottobre',
+      'Novembre',
+      'Dicembre',
+    ];
+
+    return mesi[mese - 1];
+  }
+
+  bool _stessaData(
+    DateTime a,
+    DateTime b,
+  ) {
+    return a.year == b.year &&
+        a.month == b.month &&
+        a.day == b.day;
   }
 
   @override
@@ -126,9 +600,9 @@ class _NuovaPartitaScreenState
                 CrossAxisAlignment.start,
             children: [
 
-              // =========================
+              // =========================================================
               // HEADER
-              // =========================
+              // =========================================================
 
               const Text(
                 'Prepariamo la partita',
@@ -153,9 +627,9 @@ class _NuovaPartitaScreenState
 
               const SizedBox(height: 25),
 
-              // =========================
+              // =========================================================
               // AVVERSARIO
-              // =========================
+              // =========================================================
 
               _sezioneTitolo(
                 icon: Icons.sports_volleyball,
@@ -219,9 +693,9 @@ class _NuovaPartitaScreenState
 
               const SizedBox(height: 28),
 
-              // =========================
+              // =========================================================
               // CATEGORIA + DATA
-              // =========================
+              // =========================================================
 
               Row(
                 crossAxisAlignment:
@@ -234,7 +708,8 @@ class _NuovaPartitaScreenState
                           CrossAxisAlignment.start,
                       children: [
                         _sezioneTitolo(
-                          icon: Icons.emoji_events_outlined,
+                          icon:
+                              Icons.emoji_events_outlined,
                           titolo: 'Categoria',
                         ),
 
@@ -294,7 +769,8 @@ class _NuovaPartitaScreenState
                           CrossAxisAlignment.start,
                       children: [
                         _sezioneTitolo(
-                          icon: Icons.calendar_today_outlined,
+                          icon:
+                              Icons.calendar_today_outlined,
                           titolo: 'Data',
                         ),
 
@@ -322,7 +798,7 @@ class _NuovaPartitaScreenState
                                       dataSelezionata ==
                                               null
                                           ? Colors.grey
-                                          : Colors.blue,
+                                          : Colors.black,
                                 ),
 
                                 const SizedBox(width: 8),
@@ -357,9 +833,9 @@ class _NuovaPartitaScreenState
 
               const SizedBox(height: 28),
 
-              // =========================
+              // =========================================================
               // CASA / FUORI
-              // =========================
+              // =========================================================
 
               _sezioneTitolo(
                 icon: Icons.location_on_outlined,
@@ -391,7 +867,8 @@ class _NuovaPartitaScreenState
                     child: _opzioneCard(
                       titolo: 'Fuori casa',
                       sottotitolo: 'Trasferta',
-                      icona: Icons.directions_bus_outlined,
+                      icona:
+                          Icons.directions_bus_outlined,
                       selezionata:
                           luogoSelezionato == 'F',
                       onTap: () {
@@ -406,9 +883,9 @@ class _NuovaPartitaScreenState
 
               const SizedBox(height: 28),
 
-              // =========================
+              // =========================================================
               // RISULTATO
-              // =========================
+              // =========================================================
 
               _sezioneTitolo(
                 icon: Icons.flag_outlined,
@@ -422,7 +899,8 @@ class _NuovaPartitaScreenState
                   Expanded(
                     child: _risultatoCard(
                       titolo: 'Vinta',
-                      icona: Icons.check_circle_outline,
+                      icona:
+                          Icons.check_circle_outline,
                       selezionata:
                           risultatoSelezionato == 'V',
                       colore: Colors.green,
@@ -455,9 +933,9 @@ class _NuovaPartitaScreenState
 
               const SizedBox(height: 32),
 
-              // =========================
+              // =========================================================
               // RIEPILOGO
-              // =========================
+              // =========================================================
 
               Container(
                 width: double.infinity,
@@ -526,9 +1004,9 @@ class _NuovaPartitaScreenState
 
               const SizedBox(height: 18),
 
-              // =========================
+              // =========================================================
               // PULSANTE
-              // =========================
+              // =========================================================
 
               SizedBox(
                 width: double.infinity,
@@ -536,11 +1014,12 @@ class _NuovaPartitaScreenState
                 child: ElevatedButton(
                   onPressed: continuaScouting,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: theme
-                        .colorScheme.primary,
+                    backgroundColor:
+                        theme.colorScheme.primary,
                     foregroundColor: Colors.white,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(
+                    shape:
+                        RoundedRectangleBorder(
                       borderRadius:
                           BorderRadius.circular(18),
                     ),
@@ -738,6 +1217,32 @@ class _NuovaPartitaScreenState
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// =============================================================
+// GIORNO DELLA SETTIMANA
+// =============================================================
+
+class _GiornoSettimana extends StatelessWidget {
+  final String giorno;
+
+  const _GiornoSettimana(this.giorno);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Center(
+        child: Text(
+          giorno,
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w800,
+            color: Colors.grey.shade500,
+          ),
         ),
       ),
     );
